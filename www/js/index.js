@@ -49,7 +49,13 @@ function dialogDismissed(buttonIndex) {
     } 
    	else if(buttonIndex==2) {
       new Toast({content: 'Carry on, you can do it.', duration: 3000});
+      createDialog('Are you tired?', tiredDialog, 'Tired dialog box!', 'I am tired', 'I am not tired');
     }
+}
+
+function tiredDialog(buttonIndex){
+    if(buttonIndex==1) { new Toast({content: "Take a break, dude.", duration: 3000}); }
+    else if(buttonIndex==2) { new Toast({content: "Keep going then.", duration: 3000});}
 }
    
    
