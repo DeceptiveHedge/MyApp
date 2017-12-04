@@ -9,7 +9,7 @@ $(document).on('pageinit', function() {
 	
 	$('#dialogButton').on('click', function() {
         // P1: message, P2: call-back, P3: title, P4: button1, P5: button2 
-		createDialog('Are you hungry?', dialogDismissed("Get back to work after eating.", 'Carry on, you can do it.'), 'Best dialog box!', 'I am hungry', 'I am not hungry');
+		createDialog('Are you hungry?', dialogDismissed, 'Best dialog box!', 'I am hungry', 'I am not hungry');
 	});
 
 
@@ -42,13 +42,13 @@ function createDialog(m, cb, t, b1, b2) {
 
 }        	      	
         	
-function dialogDismissed(buttonIndex, r1, r2) {
+function dialogDismissed(buttonIndex) {
 	
 	if(buttonIndex==1) {
-      new Toast({content: r1, duration: 3000}); 
+      new Toast({content: "Get back to work after eating.", duration: 3000}); 
     } 
    	else if(buttonIndex==2) {
-      new Toast({content: r2, duration: 3000});
+      new Toast({content: 'Carry on, you can do it.', duration: 3000});
     }
 }
    
