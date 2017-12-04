@@ -3,15 +3,18 @@ var notification_count=0;
 $(document).on('pageinit', function() {
 
 	$('#messageButton').on('click', function() {
+        // P1: message, P2: time on display
 		 createMessage('You are the best.', 2000);
 	});
 	
 	$('#dialogButton').on('click', function() {
-		createDialog('Are you hungry?', dialogDismissed, 'Best dialog box!', 'I am hungry', 'I am not hungry');
+        // P1: message, P2: call-back, P3: title, P4: button1, P5: button2 
+		createDialog('Are you hungry?', dialogDismissed("Get back to work after eating.", 'Carry on, you can do it.'), 'Best dialog box!', 'I am hungry', 'I am not hungry');
 	});
 
 
 	$('#notificationButton').on('click', function() {
+        // P1: time delay, P2: title, P3: message
 		createNotification(3000, "Hey you", "Get back to work.");
 	});
 
@@ -37,20 +40,17 @@ function createDialog(m, cb, t, b1, b2) {
         [b1, b2]                  // buttons
     );
 
-}
+}        	      	
         	
-        	
-        	
-function dialogDismissed(buttonIndex) {
+function dialogDismissed(buttonIndex, r1, r2) {
 	
 	if(buttonIndex==1) {
-      new Toast({content: "Get back to work after eating.", duration: 3000}); 
+      new Toast({content: r1, duration: 3000}); 
     } 
    	else if(buttonIndex==2) {
-      new Toast({content: 'Carry on, you can do it.', duration: 3000});
+      new Toast({content: r2, duration: 3000});
     }
 }
-
    
    
 function createNotification(td, t, m) {
