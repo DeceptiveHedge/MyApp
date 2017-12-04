@@ -1,20 +1,29 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <title>Default App</title>
-
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-	<script src="jquery-mobile/jquery-1.8.3.min.js" type="text/javascript"></script>
-    <script src="jquery-mobile/jquery.mobile-1.4.5.min.js" type="text/javascript"></script>
-    <script src="js/index.js"type="text/javascript" charset="utf-8"></script>
-	<link href="jquery-mobile/jquery.mobile-1.4.5.min.css" rel="stylesheet" type="text/css">
-	
+        <title>Notifications, Dialogs and Messages</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="stylesheet" href="css/toast.css" type="text/css">
+        <link href="jquery-mobile/jquery.mobile-1.4.5.min.css" rel="stylesheet" type="text/css">
+        
+		<script src="jquery-mobile/jquery-1.11.1.min.js" type="text/javascript"></script>
+        <script src="jquery-mobile/jquery.mobile-1.4.5.min.js" type="text/javascript"></script>
+        <script src="cordova.js"></script>
+        <script src="js/toast.js"></script>
+        <script src="js/index.js"></script>
 </head>
 
-<body onload="onLoad()">
-  
-  	<h1>App stuff</h1>
-	<div id="launched"></div>
+<body>
+
+<div data-role="page" id="page">
+
+  <div data-role="content">
+		<button id="messageButton">Message</button>
+     	<button id="dialogButton">Dialog</button>
+        <button id="notificationButton">Notification</button> 
+  </div>
+
+</div>
 
 </body>
 </html>
