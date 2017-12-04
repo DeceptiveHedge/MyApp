@@ -34,10 +34,10 @@ function createDialog() {
 	//here's a simple example
       
 	navigator.notification.confirm(
-    	'Are you tired?',  // message
+    	'Are you hungry?',  // message
         dialogDismissed,         // callback
         'Best dialog box!',            // title
-        ['I am knackered!', 'I can go all day']                  // buttons
+        ['I am hungry', 'I am not hungry']                  // buttons
     );
 
 }
@@ -46,9 +46,13 @@ function createDialog() {
         	
 function dialogDismissed(buttonIndex) {
 	
-	if(buttonIndex==1) new Toast({content: "Take a break, dude", duration: 3000});
-   	else if(buttonIndex==2) new Toast({content: 'Carry on, you can do it.', duration: 3000});
-
+	if(buttonIndex==1) {
+      new Toast({content: "Get back to work after eating.", duration: 3000}); 
+      createNotification;
+    } 
+   	else if(buttonIndex==2) {
+      new Toast({content: 'Carry on, you can do it.', duration: 3000});
+    }
 }
 
    
@@ -59,7 +63,7 @@ function createNotification() {
     //generate a time to post notification
     //
     var currentTime = new Date().getTime(); //current time
-    var notificationTime = new Date(currentTime + 1000); //delayed time  - add 1 second
+    var notificationTime = new Date(currentTime + 30000); //delayed time  - add 1 second
     			
     //
     //setup notification
@@ -68,7 +72,7 @@ function createNotification() {
     cordova.plugins.notification.local.schedule({ 
     	id: 		1,
         title: 		"Hey you",
-        message: 	"This is an example notification",
+        message: 	"Get back to work.",
         date: 		notificationTime, 
         badge: 		notification_count++
    	});
