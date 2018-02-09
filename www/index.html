@@ -1,26 +1,42 @@
 <html>
 <head>
-        <title>Notifications, Dialogs and Messages</title>
+        <title>Social Networking</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
-        <link rel="stylesheet" href="css/toast.css" type="text/css">
+        
         <link href="jquery-mobile/jquery.mobile-1.4.5.min.css" rel="stylesheet" type="text/css">
         
 		<script src="jquery-mobile/jquery-1.11.1.min.js" type="text/javascript"></script>
         <script src="jquery-mobile/jquery.mobile-1.4.5.min.js" type="text/javascript"></script>
         <script src="cordova.js"></script>
-        <script src="js/toast.js"></script>
-        <script src="js/index.js"></script>
+        <script src="js/backendless.min.js" type="text/javascript"></script>
+        <script src="js/index.js" type="text/javascript"></script>
+       
 </head>
 
 <body>
 
-<div data-role="page" id="page">
+<div data-role="page" id="todopage">
 
   <div data-role="content">
-		<button id="messageButton">Message</button>
-     	<button id="dialogButton">Dialog</button>
-        <button id="notificationButton">Notification</button> 
+<!--		<button id="messageButton">Message</button>-->
+      <input type"text" name="textinput" id="TaskText" value="" placeholder="New Task" />
+      
+      <select name="select-native-1" id="TaskSelect">
+          
+      </select>
+      
+      <button id="addTaskButton">Add Task</button>
+      <!--<input type"button" id="addTaskButton" value="Add Task" />-->
+      
+      <ul data-role="listview" id="taskList">
+          
+          <li>First Task</li>
+          
+          <li>Another Task</li>
+          
+      </ul>
+     	
   </div>
 
 </div>
