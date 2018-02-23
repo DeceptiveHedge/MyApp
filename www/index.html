@@ -1,12 +1,10 @@
 <html>
 <head>
-        <title>Social Networking</title>
+        <title>LogIn</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        
         
         <link href="jquery-mobile/jquery.mobile-1.4.5.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="leaflet/leaflet.css" />
-        
         
         <script src="leaflet/leaflet.js"></script>
         
@@ -21,21 +19,26 @@
 <body>
     
 <div data-role="page" id="signIn">
+    
     <div data-role="header">
-        <h1>My App</h1>
+        <h1>My-Mini-Map</h1>
     </div>
     
     <div data-role="main" class="ui-content">
-        <label>Email:</label>
-        <input type="text" name="textinput" id="EmailText" value="" />
         
-        <label>Password:</label>
-        <input type="text" name="textinput" id="PasswordText" value"" />
+        <table>
+            <tr>
+                <td><label for="EmailText" >Email:</label></td>
+                <td><input type="text" name="textinput" id="EmailText" value="" /></td>
+                <td></td>
+                <td><label for="PasswordText">Password:</label></td>
+                <td><input type="text" name="textinput" id="PasswordText" value"" /></td>
+                <td></td>
+                <td><button id="LogIn">Log In</button></td>
+            </tr>
+        </table>
         
-        <button id="LogIn">Log In</button>
-    </div>
-    
-    
+    </div>  
     
 </div>
 

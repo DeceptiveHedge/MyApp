@@ -7,10 +7,10 @@
 
     <!-- versionCode is optional and Android only -->
 
-    <name>Social Networking</name>
+    <name>My-Mini-Map</name>
 
     <description>
-        A dialog, notification and toast message demonstration application
+        Map app
     </description>
 
     <author href="http://www.worcester.ac.uk/discover/chris-bowers.html" email="c.bowers@worc.ac.uk">
