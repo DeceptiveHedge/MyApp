@@ -6,12 +6,16 @@ $(document).on("pageshow", "#todopage", onPageShow);
 
 $(document).on("click", "#addTaskButton", onAddTask);
 
+var mymap;
+
+
+
 function mapScreen() {
     console.log("mapscreen");
     
+    mymap = L.map('map').setView([51.505, -0.09], 13);
     
-    
-    var mymap = L.map('map').setView([51.505, -0.09], 13);
+    mymap.locate({setView: true, maxZoom: 16});
     
     var marker = L.marker([51.5, -0.09]).addTo(mymap);
     
@@ -30,6 +34,21 @@ function mapScreen() {
     accessToken: 'pk.eyJ1IjoiZGVjZXB0aXZlaGVkZ2UiLCJhIjoiY2plZTZ5ajRmMTM3NTJ4bzlzNGQwdGtlYyJ9.Ehp7SAyfmfmA9RvFrw_Upg'
 }).addTo(mymap);
     
+    mymap.on('locationfound', onLocationFound);
+    mymap.on('locationerror', onLocationError);
+}
+
+
+function onLocationFound(e) {
+    var radius = e.accuracy / 2;
+    
+    L.marker(e.latlng).addTo(mymap)
+        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+    L.circle(e.latlng, radius).addTo(mymap);
+}
+
+function onLocationError(e) {
+    alert(e.message);
 }
 
 function onPageShow() {
