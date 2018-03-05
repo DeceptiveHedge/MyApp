@@ -15,6 +15,8 @@ function mapScreen() {
     
     var marker = L.marker([51.5, -0.09]).addTo(mymap);
     
+    marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    
     var circle = L.circle([51.508, -0.11], {
         color: 'blue',
         fillColor: '#f03',
