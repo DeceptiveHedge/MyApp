@@ -17,8 +17,6 @@
         Chris P. Bowers
     </author>
 	
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	
 	<!-- required plugins go here -->
     <plugin name="cordova-plugin-dialogs"/>
     <plugin name="cordova-plugin-local-notification" version="0.8" />
