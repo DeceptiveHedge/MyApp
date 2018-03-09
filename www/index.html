@@ -1,6 +1,6 @@
 <html>
 <head>
-        <title>LogIn</title>
+        <title>My-Mini-Map</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
         
         <link href="jquery-mobile/jquery.mobile-1.4.5.min.css" rel="stylesheet" type="text/css">
@@ -17,13 +17,26 @@
 </head> 
 
 <body>
-    
+ 
+<!--THE MAIN MAP SCREEN-->
 <div data-role="page" id="viewScreen">
-    <div id="map-content" data-role="content">
-  <div id="map"></div>
-    </div> 
-</div>
+    <div data-role="header">
+        <button id="SaveMap">Save Map</button>
+        <h1>This Map</h1>
+        <button id="AddPoint">Add Pointer</button>
+    </div>
     
+    <div id="map-content" data-role="content">
+        <div id="map"></div>
+    </div>
+    
+    <div data-role="footer">
+        <button id="LoadMap">Load Map</button>
+        <button id="ShareMap">Share Map</button>
+    </div>
+</div>
+
+<!--THE LOGIN SCREEN-->
 <div data-role="page" id="signIn">
     
     <div data-role="header">
