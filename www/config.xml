@@ -21,5 +21,9 @@
     <plugin name="cordova-plugin-dialogs"/>
     <plugin name="cordova-plugin-local-notification" version="0.8" />
     <plugin name="cordova-plugin-geolocation" spec="~4.0.1" />
+    <plugin name="cordova-plugin-geolocation-android-activator" />
+    <plugin name="cordova-plugin-whitelist" spec="~1.3.3" />
+    <access origin="*" />
+        
 
 </widget>
