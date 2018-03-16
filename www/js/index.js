@@ -1,6 +1,13 @@
 Backendless.initApp("E81ED314-BB9B-EFD8-FF4C-74A2F7CFC800", "B3B57989-569A-3AB0-FF75-5DE0AB3FB300");
 
+// Event Listeners for map screen:
 $(document).on("pageshow", "#viewScreen", mapScreen);
+
+$(document).on("click", "#AddPoint", onAddPoint);
+
+
+
+
 
 $(document).on("pageshow", "#todopage", onPageShow);
 
@@ -12,6 +19,25 @@ var mymap;
 
 function mapScreen() {
     console.log("mapscreen");
+    var IconValue;
+    var ColorValue;
+    
+    $('#IconList').change(function () { 
+    
+        console.log("icon changed");
+        IconValue = $('#IconList').val();
+        console.log(IconValue);
+        ColorValue = $('#ColorList').val();
+        $("#PanelImage").attr('src', 'images/icons/' + IconValue + '/' + ColorValue + '%20' + IconValue + '.png');
+    });
+    
+    $('#ColorList').change(function () {
+        console.log("color changed");
+        IconValue = $('#IconList').val();
+        console.log(IconValue);
+        ColorValue = $('#ColorList').val();
+        $("#PanelImage").attr('src', 'images/icons/' + IconValue + '/' + ColorValue + '%20' + IconValue + '.png');
+    })
     
     mymap = L.map('map').setView([51.505, -0.09], 13);
     
@@ -50,6 +76,20 @@ function onLocationFound(e) {
 function onLocationError(e) {
     alert(e.message);
 }
+
+function onAddPoint() {
+    $("#PointerPanel").panel("open");
+}
+
+
+
+
+
+
+
+
+
+
 
 function onPageShow() {
      console.log("page shown");
