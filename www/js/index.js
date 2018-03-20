@@ -43,6 +43,8 @@ function mapScreen() {
     })
     
     $('#AddPanelPoint').on("click", function () {
+        var IconName = $("#IconNameText").val();
+        
         var MarkerPlaced = false;
         console.log("pointer being added");
         $("#PointerPanel").panel("close");
@@ -54,9 +56,9 @@ function mapScreen() {
             {
                 console.log("Double Click on map");
                 
-                var nIcon = L.icon({iconUrl: $("#PanelImage").attr('src'), iconSize: [38, 38], iconAnchor: e.latlng});
+                var nIcon = L.icon({iconUrl: $("#PanelImage").attr('src'), iconSize: [38, 38], iconAnchor: [22, 94]});
                 
-                var nMarker = L.marker(e.latlng, {icon: nIcon}).addTo(mymap);
+                var nMarker = L.marker(e.latlng, {icon: nIcon}).addTo(mymap).bindPopup(IconName);
                 
                 MarkerPlaced = true;
                 return;
