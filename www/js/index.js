@@ -58,7 +58,7 @@ function mapScreen() {
                 
                 var nIcon = L.icon({iconUrl: $("#PanelImage").attr('src'), iconSize: [38, 38], iconAnchor: [22, 94]});
                 
-                var nMarker = L.marker(e.latlng, {icon: nIcon}).addTo(mymap).bindPopup(IconName);
+                var nMarker = L.marker(e.latlng, {icon: nIcon}).addTo(mymap).bindPopup("<table><tr><td><b>" + IconName + "</b></td></tr><tr><td><button id='IconDirections'>Directions</button></td><td><button id='DeletePopup'>Delete</button></td></tr></table>");
                 
                 MarkerPlaced = true;
                 return;
