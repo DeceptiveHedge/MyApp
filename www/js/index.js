@@ -3,7 +3,7 @@ Backendless.initApp("E81ED314-BB9B-EFD8-FF4C-74A2F7CFC800", "B3B57989-569A-3AB0-
 // Event Listeners for map screen:
 $(document).on("pageshow", "#viewScreen", mapScreen);
 
-$(document).on("click", "#AddPoint", onAddPoint);
+
 
 
 
@@ -22,8 +22,11 @@ function mapScreen() {
     var IconValue;
     var ColorValue;
     
-    $('#IconList').change(function () { 
+    $('#AddPoint').on("click", function () {
+        $("#PointerPanel").panel("open");
+    });
     
+    $('#IconList').change(function () { 
         console.log("icon changed");
         IconValue = $('#IconList').val();
         console.log(IconValue);
@@ -38,6 +41,35 @@ function mapScreen() {
         ColorValue = $('#ColorList').val();
         $("#PanelImage").attr('src', 'images/icons/' + IconValue + '/' + ColorValue + '%20' + IconValue + '.png');
     })
+    
+    $('#AddPanelPoint').on("click", function () {
+        var MarkerPlaced = false;
+        console.log("pointer being added");
+        $("#PointerPanel").panel("close");
+        
+        alert("Double Tap on map to add pointer.");
+        
+        mymap.on('dblclick', function (e) {
+            if (MarkerPlaced == false)
+            {
+                console.log("Double Click on map");
+                
+                var nIcon = L.icon({iconUrl: $("#PanelImage").attr('src'), iconSize: [38, 38], iconAnchor: e.latlng});
+                
+                var nMarker = L.marker(e.latlng, {icon: nIcon}).addTo(mymap);
+                
+                MarkerPlaced = true;
+                return;
+            }
+        });
+        
+        return;
+    });
+    
+    $('#ClosePanel').on("click", function () {
+        console.log("panel closed");
+        $("#PointerPanel").panel("close");
+    });
     
     mymap = L.map('map').setView([51.505, -0.09], 13);
     
@@ -77,9 +109,7 @@ function onLocationError(e) {
     alert(e.message);
 }
 
-function onAddPoint() {
-    $("#PointerPanel").panel("open");
-}
+
 
 
 
