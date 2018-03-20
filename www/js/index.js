@@ -16,16 +16,18 @@ $(document).on("click", "#addTaskButton", onAddTask);
 var mymap;
 
 
-
+// METHOD: Handles actions on the map screen:
 function mapScreen() {
     console.log("mapscreen");
     var IconValue;
     var ColorValue;
     
+    // EVENT HANDLER: opens panel when button is clicked
     $('#AddPoint').on("click", function () {
         $("#PointerPanel").panel("open");
     });
     
+    // EVENT HANDLER: Updates image properties when ICON drop down list changes selected value
     $('#IconList').change(function () { 
         console.log("icon changed");
         IconValue = $('#IconList').val();
@@ -34,6 +36,7 @@ function mapScreen() {
         $("#PanelImage").attr('src', 'images/icons/' + IconValue + '/' + ColorValue + '%20' + IconValue + '.png');
     });
     
+    // EVENT HANDLER: Updates image properties when COLOR drop down list changes selected value
     $('#ColorList').change(function () {
         console.log("color changed");
         IconValue = $('#IconList').val();
@@ -42,6 +45,7 @@ function mapScreen() {
         $("#PanelImage").attr('src', 'images/icons/' + IconValue + '/' + ColorValue + '%20' + IconValue + '.png');
     })
     
+    // EVENT HANDLER: Creates pointer and allows it to be placed on map
     $('#AddPanelPoint').on("click", function () {
         var IconName = $("#IconNameText").val();
         
@@ -58,7 +62,10 @@ function mapScreen() {
                 
                 var nIcon = L.icon({iconUrl: $("#PanelImage").attr('src'), iconSize: [38, 38], iconAnchor: [22, 94]});
                 
-                var nMarker = L.marker(e.latlng, {icon: nIcon}).addTo(mymap).bindPopup("<table><tr><td><b>" + IconName + "</b></td></tr><tr><td><button id='IconDirections'>Directions</button></td><td><button id='DeletePopup'>Delete</button></td></tr></table>");
+                var nPopup = L.popup()
+                    .setContent("<table><tr><td><b>" + IconName + "</b></td></tr><tr><td><button id='IconDirections'>Directions</button></td><td><button id='DeletePopup'>Delete</button></td></tr></table>");
+                
+                var nMarker = L.marker(e.latlng, {icon: nIcon}).addTo(mymap).bindPopup(nPopup);
                 
                 MarkerPlaced = true;
                 return;
@@ -68,10 +75,12 @@ function mapScreen() {
         return;
     });
     
+    // EVENT HANDLER: closes panel when button is clicked
     $('#ClosePanel').on("click", function () {
         console.log("panel closed");
         $("#PointerPanel").panel("close");
     });
+    
     
     mymap = L.map('map').setView([51.505, -0.09], 13);
     
