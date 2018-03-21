@@ -14,7 +14,8 @@ $(document).on("pageshow", "#todopage", onPageShow);
 $(document).on("click", "#addTaskButton", onAddTask);
 
 var mymap;
-
+var startLocation;
+var Pointers = [];
 
 // METHOD: Handles actions on the map screen:
 function mapScreen() {
@@ -22,7 +23,9 @@ function mapScreen() {
     var IconValue;
     var ColorValue;
     
-    // EVENT HANDLER: opens panel when button is clicked
+//---------ADD POINTER-----------------------//
+    
+    // EVENT HANDLER: opens panel when Add Pointer button is clicked
     $('#AddPoint').on("click", function () {
         $("#PointerPanel").panel("open");
     });
@@ -68,6 +71,20 @@ function mapScreen() {
                 var nMarker = L.marker(e.latlng, {icon: nIcon}).addTo(mymap).bindPopup(nPopup);
                 
                 MarkerPlaced = true;
+                
+                var pointerDetail = {
+                    "IconUrl": $("#PanelImage").attr('src'),
+                    "IconName": IconName,
+                    "Latitude": e.latlng.lat,
+                    "Longitude": e.latlng.lng
+                };
+                
+                var nPointer = JSON.stringify(pointerDetail);
+                
+                console.log(nPointer);
+                
+                Pointers.push(nPointer);
+                
                 return;
             }
         });
@@ -75,12 +92,50 @@ function mapScreen() {
         return;
     });
     
-    // EVENT HANDLER: closes panel when button is clicked
+     // EVENT HANDLER: closes panel when button is clicked
     $('#ClosePanel').on("click", function () {
         console.log("panel closed");
         $("#PointerPanel").panel("close");
     });
     
+//---------------SAVE MAP---------------------//
+   
+    
+    // EVENT HANDLER saves map when "Save Map" button is clicked:
+    $('#SaveMap').on("click", function () {
+        console.log("detect this");
+        $("#SavePanel").panel("open");
+    });
+    
+    $('#SavePanelMap').on("click", function () {
+        var MapName = $('#MapNameText').val();
+        var Location = startLocation;
+        
+        
+        if (MapName != "")
+        {
+            var MapDetail = {
+                "Name": MapName,
+                "Latitude": Location.lat,
+                "Longitude": Location.lng,
+                "Pointers": Pointers.toString()
+            }
+            
+            var nMap = JSON.stringify(MapDetail);
+            console.log(nMap);
+            window.localStorage.setItem("Map1", nMap);
+        }
+        else
+        {
+           alert("Please name your map."); 
+        }
+    });
+    
+    $('#CloseSave').on("click", function () {
+        $("#SavePanel").panel("close");
+    });
+    
+//-------------MAP CREATION-------------------//
     
     mymap = L.map('map').setView([51.505, -0.09], 13);
     
@@ -110,6 +165,8 @@ function mapScreen() {
 
 function onLocationFound(e) {
     var radius = e.accuracy / 2;
+    startLocation = e.latlng;
+    console.log(startLocation);
     
     L.marker(e.latlng).addTo(mymap)
         .bindPopup("You are within " + radius + " meters from this point").openPopup();

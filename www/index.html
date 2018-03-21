@@ -17,14 +17,17 @@
 </head> 
 
 <body>
+
  
 <!--THE MAIN MAP SCREEN-->
 <div data-role="page" id="viewScreen">
+    
     <div data-role="header">
         <button id="SaveMap">Save Map</button>
         <h1>This Map</h1>
         <button id="AddPoint">Add Pointer</button>
     </div>
+    
     
     <div id="map-content" data-role="content">
         <div id="map"></div>
@@ -59,7 +62,20 @@
         <button id="AddPanelPoint">Add Pointer</button>
         <button id="ClosePanel">Close</button>
     </div>
+    <div data-role="panel" data-position="left" data-display="overlay" id="SavePanel">
+        <h3>Save Map</h3>
+        <table>
+        <tr>
+            <td><label for="MapNameText">Name:</label></td>
+            <td><input type="text" name="mname input" id="MapNameText" value="" /></td>
+        </tr>
+        </table>
+        <button id="SavePanelMap">Save Map</button>
+        <button id="CloseSave">Close</button>
+    </div>
+    
 </div>
+
 
 <!--THE LOGIN SCREEN-->
 <div data-role="page" id="signIn">
