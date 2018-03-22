@@ -95,30 +95,8 @@ function addPointer() {
             if (MarkerPlaced == false)
             {
                 console.log("Double Click on map");
-                
-                var nIcon = L.icon({iconUrl: $("#PanelImage").attr('src'), iconSize: [38, 38], iconAnchor: [22, 94]});
-                
-                var nPopup = L.popup()
-                    .setContent("<table><tr><td><b>" + IconName + "</b></td></tr><tr><td><button id='IconDirections'>Directions</button></td><td><button id='DeletePopup'>Delete</button></td></tr></table>");
-                
-                var nMarker = L.marker(e.latlng, {icon: nIcon}).addTo(mymap).bindPopup(nPopup);
-                
+                createPointer(IconName, e.latlng, $("#PanelImage").attr('src'));
                 MarkerPlaced = true;
-                
-                var pointerDetail = {
-                    "IconUrl": $("#PanelImage").attr('src'),
-                    "IconName": IconName,
-                    "Latitude": e.latlng.lat,
-                    "Longitude": e.latlng.lng
-                };
-                
-                var nPointer = JSON.stringify(pointerDetail);
-                
-                console.log(nPointer);
-                
-                Pointers.push(nPointer);
-                
-                return;
             }
         });
         
@@ -132,6 +110,30 @@ function addPointer() {
     });
 }
 
+//---------------CREATE POINTER-----------------------//
+function createPointer(Name, Loc, Image)
+{
+    console.log(Loc);
+    var nIcon = L.icon({iconUrl: Image, iconSize: [38, 38], iconAnchor: [22, 94]});
+                
+                var nPopup = L.popup()
+                    .setContent("<table><tr><td><b>" + Name + "</b></td></tr><tr><td><button id='IconDirections'>Directions</button></td><td><button id='DeletePopup'>Delete</button></td></tr></table>");
+                
+                var nMarker = L.marker(Loc, {icon: nIcon}).addTo(mymap).bindPopup(nPopup);
+                
+                var pointerDetail = {
+                    "IconUrl": Image,
+                    "IconName": Name,
+                    "Location": Loc
+                };
+                
+                var nPointer = JSON.stringify(pointerDetail);
+                
+                Pointers.push(nPointer);
+                
+                return;
+}
+
 //---------------SAVE MAP------------------------------//
 function saveMap() {
     // EVENT HANDLER saves map when "Save Map" button is clicked:
@@ -139,6 +141,7 @@ function saveMap() {
         console.log("detect this");
         $("#SavePanel").panel("open");
         console.log("There are " + window.localStorage.length + " items.");
+        console.log(Pointers);
     });
     
     $('#SavePanelMap').on("click", function () {
@@ -179,6 +182,7 @@ function saveMap() {
     });
 }
 
+//--------------LOAD MAP-------------------------//
 function loadMap() {
     var Maplist = document.getElementById("MapList");
     
@@ -218,9 +222,17 @@ function loadMap() {
                 var longitude = mapJSON.Longitude;
                 var pointersJSON = mapJSON.Pointers;
                 console.log(pointersJSON);
-                
-                
                 document.getElementById('MapHeading').innerHTML = mapName; 
+                
+                for (var i = 0; i < pointersJSON.length; i++)
+                {
+                    var pJSON = JSON.parse(pointersJSON[i]);
+                    var pName = pJSON.IconName;
+                    var pLoc = pJSON.Location;
+                    var pImage = pJSON.IconUrl;
+                    
+                    createPointer(pName, pLoc, pImage);
+                }
             }
                
         }
