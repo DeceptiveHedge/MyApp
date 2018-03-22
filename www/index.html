@@ -24,7 +24,7 @@
     
     <div data-role="header">
         <button id="SaveMap">Save Map</button>
-        <h1>This Map</h1>
+        <h1 id=MapHeading>My Map</h1>
         <button id="AddPoint">Add Pointer</button>
     </div>
     
@@ -38,6 +38,7 @@
         <button id="ShareMap">Share Map</button>
     </div>
     
+    <!--THE ADD POINTER PANEL-->
     <div data-role="panel" data-position="right" data-display="overlay" id="PointerPanel">
         <h3>Create Pointer</h3>
         <select id="IconList">
@@ -62,6 +63,8 @@
         <button id="AddPanelPoint">Add Pointer</button>
         <button id="ClosePanel">Close</button>
     </div>
+    
+    <!--THE SAVE MAP PANEL-->
     <div data-role="panel" data-position="left" data-display="overlay" id="SavePanel">
         <h3>Save Map</h3>
         <table>
@@ -72,6 +75,16 @@
         </table>
         <button id="SavePanelMap">Save Map</button>
         <button id="CloseSave">Close</button>
+    </div>
+    
+    <!--THE LOAD MAP PANEL-->
+    <div data-role="panel" data-position="left" data-display="overlay" id="LoadPanel">
+        <h3>Load Map</h3>
+        <select id="MapList">
+        </select>
+        <button id="LoadPanelMap">Load Map</button>
+        <button id="CloseLoad">Close</button>
+        <button id="DeleteAll">Delete All</button>
     </div>
     
 </div>

@@ -19,11 +19,44 @@ var Pointers = [];
 
 // METHOD: Handles actions on the map screen:
 function mapScreen() {
-    console.log("mapscreen");
+
+    createMap();
+    addPointer();
+    saveMap();
+    loadMap();   
+}
+
+//-------------MAP CREATION-------------------//
+function createMap() {
+    mymap = L.map('map').setView([51.505, -0.09], 13);
+    
+    mymap.locate({setView: true, maxZoom: 16});
+    
+    var marker = L.marker([51.5, -0.09]).addTo(mymap);
+    
+    marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    
+    var circle = L.circle([51.508, -0.11], {
+        color: 'blue',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 500
+    }).addTo(mymap);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGVjZXB0aXZlaGVkZ2UiLCJhIjoiY2plZTZ5ajRmMTM3NTJ4bzlzNGQwdGtlYyJ9.Ehp7SAyfmfmA9RvFrw_Upg', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1IjoiZGVjZXB0aXZlaGVkZ2UiLCJhIjoiY2plZTZ5ajRmMTM3NTJ4bzlzNGQwdGtlYyJ9.Ehp7SAyfmfmA9RvFrw_Upg'
+}).addTo(mymap);
+    
+    mymap.on('locationfound', onLocationFound);
+    mymap.on('locationerror', onLocationError);
+}
+
+//---------ADD POINTER--------------------------------//
+function addPointer() {
     var IconValue;
     var ColorValue;
-    
-//---------ADD POINTER-----------------------//
     
     // EVENT HANDLER: opens panel when Add Pointer button is clicked
     $('#AddPoint').on("click", function () {
@@ -97,14 +130,15 @@ function mapScreen() {
         console.log("panel closed");
         $("#PointerPanel").panel("close");
     });
-    
-//---------------SAVE MAP---------------------//
-   
-    
+}
+
+//---------------SAVE MAP------------------------------//
+function saveMap() {
     // EVENT HANDLER saves map when "Save Map" button is clicked:
     $('#SaveMap').on("click", function () {
         console.log("detect this");
         $("#SavePanel").panel("open");
+        console.log("There are " + window.localStorage.length + " items.");
     });
     
     $('#SavePanelMap').on("click", function () {
@@ -118,12 +152,21 @@ function mapScreen() {
                 "Name": MapName,
                 "Latitude": Location.lat,
                 "Longitude": Location.lng,
-                "Pointers": Pointers.toString()
-            }
+                "Pointers": Pointers
+            };
             
             var nMap = JSON.stringify(MapDetail);
             console.log(nMap);
-            window.localStorage.setItem("Map1", nMap);
+            
+            var nKey = "Map" + window.localStorage.length;
+        
+            window.localStorage.setItem(nKey, nMap);
+            
+            document.getElementById('MapHeading').innerHTML = MapName;
+            
+            $("#SavePanel").panel("close");
+            
+            alert("Map Saved");
         }
         else
         {
@@ -134,34 +177,65 @@ function mapScreen() {
     $('#CloseSave').on("click", function () {
         $("#SavePanel").panel("close");
     });
-    
-//-------------MAP CREATION-------------------//
-    
-    mymap = L.map('map').setView([51.505, -0.09], 13);
-    
-    mymap.locate({setView: true, maxZoom: 16});
-    
-    var marker = L.marker([51.5, -0.09]).addTo(mymap);
-    
-    marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-    
-    var circle = L.circle([51.508, -0.11], {
-        color: 'blue',
-        fillColor: '#f03',
-        fillOpacity: 0.5,
-        radius: 500
-    }).addTo(mymap);
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGVjZXB0aXZlaGVkZ2UiLCJhIjoiY2plZTZ5ajRmMTM3NTJ4bzlzNGQwdGtlYyJ9.Ehp7SAyfmfmA9RvFrw_Upg', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox.streets',
-    accessToken: 'pk.eyJ1IjoiZGVjZXB0aXZlaGVkZ2UiLCJhIjoiY2plZTZ5ajRmMTM3NTJ4bzlzNGQwdGtlYyJ9.Ehp7SAyfmfmA9RvFrw_Upg'
-}).addTo(mymap);
-    
-    mymap.on('locationfound', onLocationFound);
-    mymap.on('locationerror', onLocationError);
 }
 
+function loadMap() {
+    var Maplist = document.getElementById("MapList");
+    
+    $('#LoadMap').on("click", function () {
+        $("#LoadPanel").panel("open");
+        
+        // CLEAR all current options from list
+        for (var i = Maplist.options.length - 1; i >=0; i--)
+        {
+            Maplist.remove(i);
+        }
+        
+        // ADD options for each saved map
+        for (var i=1; (i+1)<=window.localStorage.length; i++)
+        {
+            var getName = window.localStorage.getItem("Map" + i);
+        
+            var mapJSON = JSON.parse(getName);
+            
+            var o = document.createElement("option");
+            o.text = mapJSON.Name;
+            Maplist.add(o);   
+        }
+    });
+    
+    $('#LoadPanelMap').on("click", function () {
+        for (var i=1; (i+1)<=window.localStorage.length; i++)
+        {
+            var MapString = window.localStorage.getItem("Map" + i);
+            var mapJSON = JSON.parse(MapString);
+            var mapName = mapJSON.Name;
+            var listName = $("#MapList").val();
+            
+            if (mapName == listName)
+            {
+                var latitude = mapJSON.Latitude;
+                var longitude = mapJSON.Longitude;
+                var pointersJSON = mapJSON.Pointers;
+                console.log(pointersJSON);
+                
+                
+                document.getElementById('MapHeading').innerHTML = mapName; 
+            }
+               
+        }
+        
+        $("#LoadPanel").panel("close");
+    });
+    
+    $('#CloseLoad').on("click", function () {
+        $("#LoadPanel").panel("close");
+    });
+    
+    $('#DeleteAll').on("click", function () {
+        window.localStorage.clear();
+    });
+}
 
 function onLocationFound(e) {
     var radius = e.accuracy / 2;
