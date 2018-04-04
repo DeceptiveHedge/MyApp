@@ -16,11 +16,13 @@ $(document).on("click", "#addTaskButton", onAddTask);
 var mymap;
 var startLocation;
 var Pointers = [];
+var markerGroup; 
 
 // METHOD: Handles actions on the map screen:
 function mapScreen() {
 
     createMap();
+    markerGroup = L.layerGroup().addTo(mymap);
     addPointer();
     saveMap();
     loadMap();   
@@ -114,12 +116,12 @@ function addPointer() {
 function createPointer(Name, Loc, Image)
 {
     console.log(Loc);
-    var nIcon = L.icon({iconUrl: Image, iconSize: [38, 38], iconAnchor: [22, 94]});
+    var nIcon = L.icon({iconUrl: Image, iconSize: [38, 38], iconAnchor: [12, 12]});
                 
                 var nPopup = L.popup()
                     .setContent("<table><tr><td><b>" + Name + "</b></td></tr><tr><td><button id='IconDirections'>Directions</button></td><td><button id='DeletePopup'>Delete</button></td></tr></table>");
-                
-                var nMarker = L.marker(Loc, {icon: nIcon}).addTo(mymap).bindPopup(nPopup);
+    
+                var nMarker = L.marker(Loc, {icon: nIcon}).addTo(markerGroup).bindPopup(nPopup);
                 
                 var pointerDetail = {
                     "IconUrl": Image,
@@ -224,6 +226,12 @@ function loadMap() {
                 console.log(pointersJSON);
                 document.getElementById('MapHeading').innerHTML = mapName; 
                 
+                // CLEAR existing pointers on map and array:
+                Pointers = [];
+                markerGroup.clearLayers();
+                
+                
+                // LOAD all pointers onto map:
                 for (var i = 0; i < pointersJSON.length; i++)
                 {
                     var pJSON = JSON.parse(pointersJSON[i]);
