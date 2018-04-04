@@ -9,6 +9,7 @@ $(document).on("pageshow", "#viewScreen", mapScreen);
 
 
 
+
 $(document).on("pageshow", "#todopage", onPageShow);
 
 $(document).on("click", "#addTaskButton", onAddTask);
@@ -25,7 +26,8 @@ function mapScreen() {
     markerGroup = L.layerGroup().addTo(mymap);
     addPointer();
     saveMap();
-    loadMap();   
+    loadMap();
+    handlePopups();
 }
 
 //-------------MAP CREATION-------------------//
@@ -88,6 +90,7 @@ function addPointer() {
         var IconName = $("#IconNameText").val();
         
         var MarkerPlaced = false;
+        
         console.log("pointer being added");
         $("#PointerPanel").panel("close");
         
@@ -113,27 +116,42 @@ function addPointer() {
 }
 
 //---------------CREATE POINTER-----------------------//
+
+
 function createPointer(Name, Loc, Image)
 {
     console.log(Loc);
     var nIcon = L.icon({iconUrl: Image, iconSize: [38, 38], iconAnchor: [12, 12]});
-                
-                var nPopup = L.popup()
-                    .setContent("<table><tr><td><b>" + Name + "</b></td></tr><tr><td><button id='IconDirections'>Directions</button></td><td><button id='DeletePopup'>Delete</button></td></tr></table>");
     
-                var nMarker = L.marker(Loc, {icon: nIcon}).addTo(markerGroup).bindPopup(nPopup);
+    // CREATE popup content, then SET content to popup:
+    var divP = document.createElement("div");
+    var namP = document.createElement("p");
+    namP.innerHTML = "<b>" + Name + "</b></br>";
+    var btnP = document.createElement("BUTTON");
+    var txtP = document.createTextNode("DELETE");
+    btnP.appendChild(txtP);
+    btnP.onclick = function(){
+       console.log("DELETE WORKING!!!"); 
+    };
+    namP.appendChild(btnP);
+    divP.appendChild(namP);
+    var nPopup = L.popup()
+                    .setContent(divP);
+    
                 
-                var pointerDetail = {
+    var nMarker = L.marker(Loc, {icon: nIcon}).addTo(markerGroup).bindPopup(nPopup);
+                
+    var pointerDetail = {
                     "IconUrl": Image,
                     "IconName": Name,
                     "Location": Loc
                 };
                 
-                var nPointer = JSON.stringify(pointerDetail);
+    var nPointer = JSON.stringify(pointerDetail);
                 
-                Pointers.push(nPointer);
+    Pointers.push(nPointer);
                 
-                return;
+    return;
 }
 
 //---------------SAVE MAP------------------------------//
@@ -256,6 +274,16 @@ function loadMap() {
         window.localStorage.clear();
     });
 }
+
+//-------------HANDLE POPUPS-----------------//
+function handlePopups() {
+    $('#DeletePopup').on("click", function () {
+        console.log("Delete popup");
+    });
+}
+
+
+//-------------------------------------------//
 
 function onLocationFound(e) {
     var radius = e.accuracy / 2;
