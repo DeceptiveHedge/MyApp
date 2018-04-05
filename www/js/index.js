@@ -27,8 +27,8 @@ function mapScreen() {
     addPointer();
     saveMap();
     loadMap();
-    handlePopups();
     createRoute(52.1790324, -2.2033975, 51.5, -0.09);
+    shareMap();
 }
 
 function createRoute(lat1, lng1, lat2, lng2) {
@@ -38,21 +38,29 @@ function createRoute(lat1, lng1, lat2, lng2) {
 
 //-------------MAP CREATION-------------------//
 function createMap() {
-    console.log("Map being created");
+    
     mymap = L.map('map').setView([51.505, -0.09], 13);
     
-    mymap.locate({setView: true, maxZoom: 16});
+    //mymap.locate({setView: true, maxZoom: 16});
     
-    //var marker = L.marker([51.5, -0.09]).addTo(mymap);
+    var marker = L.marker(mymap.getCenter()).addTo(mymap);
     
-   // marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    var glcl = google.loader.ClientLocation;
     
-    var circle = L.circle([51.508, -0.11], {
+    var onLocationFound = function(e){
+        marker.setLatLng(e.latlng);
+        
+        mymap.setView(marker.getLatLng(), mymap.getZoom());
+        
+        alert('Marker has been set to position:'+marker.getLatLng().toString());
+    };
+    
+    /*var circle = L.circle([51.508, -0.11], {
         color: 'blue',
         fillColor: '#f03',
         fillOpacity: 0.5,
         radius: 500
-    }).addTo(mymap);
+    }).addTo(mymap);*/
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGVjZXB0aXZlaGVkZ2UiLCJhIjoiY2plZTZ5ajRmMTM3NTJ4bzlzNGQwdGtlYyJ9.Ehp7SAyfmfmA9RvFrw_Upg', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 18,
@@ -61,6 +69,13 @@ function createMap() {
 }).addTo(mymap);
     
     mymap.on('locationfound', onLocationFound);
+             
+    if(glcl){
+        onLocationFound({latlng: [glcl.latitude, glcl.longitude]});
+    }else{alert('google.loader.ClientLocation fails');}  
+    
+    mymap.locate();
+             
     mymap.on('locationerror', onLocationError);
 }
 
@@ -295,17 +310,21 @@ function loadMap() {
     });
 }
 
-//-------------HANDLE POPUPS-----------------//
-function handlePopups() {
-    $('#DeletePopup').on("click", function () {
-        console.log("Delete popup");
+//-------------SHARE MAP-----------------//
+function shareMap() {
+    $('#ShareMap').on("click", function () {
+        $("#SharePanel").panel("open");
+    });
+    
+    $('#CloseShare').on("click", function () {
+        $("#SharePanel").panel("close");
     });
 }
 
 
 //-------------------------------------------//
 
-function onLocationFound(e) {
+/*function onLocationFound(e) {
     var radius = e.accuracy / 2;
     startLocation = e.latlng;
     console.log(e.latlng);
@@ -313,7 +332,7 @@ function onLocationFound(e) {
    // L.marker(e.latlng).addTo(mymap)
        // .bindPopup("You are within " + radius + " meters from this point").openPopup();
     L.circle(e.latlng, radius).addTo(mymap);
-}
+}*/
 
 function onLocationError(e) {
     alert(e.message);
