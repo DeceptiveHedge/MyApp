@@ -28,17 +28,24 @@ function mapScreen() {
     saveMap();
     loadMap();
     handlePopups();
+    createRoute(52.1790324, -2.2033975, 51.5, -0.09);
 }
+
+function createRoute(lat1, lng1, lat2, lng2) {
+    
+}
+
 
 //-------------MAP CREATION-------------------//
 function createMap() {
+    console.log("Map being created");
     mymap = L.map('map').setView([51.505, -0.09], 13);
     
     mymap.locate({setView: true, maxZoom: 16});
     
-    var marker = L.marker([51.5, -0.09]).addTo(mymap);
+    //var marker = L.marker([51.5, -0.09]).addTo(mymap);
     
-    marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+   // marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
     
     var circle = L.circle([51.508, -0.11], {
         color: 'blue',
@@ -131,7 +138,20 @@ function createPointer(Name, Loc, Image)
     var txtP = document.createTextNode("DELETE");
     btnP.appendChild(txtP);
     btnP.onclick = function(){
+        console.log(Pointers.length);
        console.log("DELETE WORKING!!!"); 
+       markerGroup.removeLayer(nMarker);
+        
+        for (var i=0; i<Pointers.length; i++)
+        {
+            dPointer = JSON.parse(Pointers[i]);
+            if (Name == dPointer.IconName)
+            {
+               Pointers.splice(i,1); 
+            }
+            console.log(Pointers.length);
+            
+        }
     };
     namP.appendChild(btnP);
     divP.appendChild(namP);
@@ -288,15 +308,16 @@ function handlePopups() {
 function onLocationFound(e) {
     var radius = e.accuracy / 2;
     startLocation = e.latlng;
-    console.log(startLocation);
+    console.log(e.latlng);
     
-    L.marker(e.latlng).addTo(mymap)
-        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+   // L.marker(e.latlng).addTo(mymap)
+       // .bindPopup("You are within " + radius + " meters from this point").openPopup();
     L.circle(e.latlng, radius).addTo(mymap);
 }
 
 function onLocationError(e) {
     alert(e.message);
+    createMap();
 }
 
 
