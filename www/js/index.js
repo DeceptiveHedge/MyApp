@@ -91,6 +91,7 @@ function createMap() {
 function addPointer() {
     var IconValue;
     var ColorValue;
+    var CheckValue;
     
     // EVENT HANDLER: opens panel when Add Pointer button is clicked
     $('#AddPoint').on("click", function () {
@@ -120,6 +121,16 @@ function addPointer() {
         var IconName = $("#IconNameText").val();
         
         var MarkerPlaced = false;
+        
+        // EVENT HANDLER: Detects wether checkbox is ticked:
+        if($('#CheckBox').is(':checked'))
+        {
+            CheckValue = true;
+        }
+        else
+        {
+            CheckValue = false;
+        }
         
         console.log("pointer being added");
         $("#PointerPanel").panel("close");
