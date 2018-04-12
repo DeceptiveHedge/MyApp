@@ -37,8 +37,9 @@ function createRoute(lat1, lng1, lat2, lng2) {
         waypoints: [
             L.latLng(lat1, lng1),
             L.latLng(lat2, lng2)
-        ]
+        ], createMarker: function() { return null;}
     }).addTo(mymap);
+    
     control.hide();
 }
 
@@ -157,17 +158,24 @@ function createPointer(Name, Loc, Image)
     var namP = document.createElement("p");
     namP.innerHTML = "<b>" + Name + "</b></br>";
     
-    /*var dreP = document.createElement("BUTTON");
+    var dreP = document.createElement("BUTTON");
     var drtxtP = document.createTextNode("DIRECTIONS");
     dreP.appendChild(drtxtP);
     dreP.onclick = function(){
         if (control == null)
         {
             createRoute(52.1790324, -2.2033975, Loc.lat, Loc.lng);
-            drtxtP.style.color = "blue";   
+            dreP.style.color = "blue";  
         }
+        else 
+        {
+            mymap.removeControl(control);
+            control = null;
+            dreP.style.color = "black";
+        }
+        
     };
-    namP.appendChild(dreP);*/
+    namP.appendChild(dreP);
     
     var dltP = document.createElement("BUTTON");
     var dtxtP = document.createTextNode("DELETE");
