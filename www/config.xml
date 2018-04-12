@@ -7,10 +7,10 @@
 
     <!-- versionCode is optional and Android only -->
 
-    <name>James-Mini-Map</name>
+    <name>My-Mini-Map</name>
 
     <description>
-        Map app
+        A map application which allows you to create custom pointers, get route to these pointers, save/load maps and share maps with friends. 
     </description>
 
     <author href="http://www.worcester.ac.uk/discover/chris-bowers.html" email="c.bowers@worc.ac.uk">

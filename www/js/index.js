@@ -18,6 +18,7 @@ var mymap;
 var startLocation;
 var Pointers = [];
 var markerGroup; 
+var control;
 
 // METHOD: Handles actions on the map screen:
 function mapScreen() {
@@ -27,12 +28,18 @@ function mapScreen() {
     addPointer();
     saveMap();
     loadMap();
-    createRoute(52.1790324, -2.2033975, 51.5, -0.09);
+    //createRoute(52.1790324, -2.2033975, 51.5, -0.09);
     shareMap();
 }
 
 function createRoute(lat1, lng1, lat2, lng2) {
-    
+    control = L.Routing.control({
+        waypoints: [
+            L.latLng(lat1, lng1),
+            L.latLng(lat2, lng2)
+        ]
+    }).addTo(mymap);
+    control.hide();
 }
 
 
@@ -52,7 +59,7 @@ function createMap() {
         
         mymap.setView(marker.getLatLng(), mymap.getZoom());
         
-        alert('Marker has been set to position:'+marker.getLatLng().toString());
+        //alert('Marker has been set to position:'+marker.getLatLng().toString());
     };
     
     /*var circle = L.circle([51.508, -0.11], {
@@ -149,10 +156,23 @@ function createPointer(Name, Loc, Image)
     var divP = document.createElement("div");
     var namP = document.createElement("p");
     namP.innerHTML = "<b>" + Name + "</b></br>";
-    var btnP = document.createElement("BUTTON");
-    var txtP = document.createTextNode("DELETE");
-    btnP.appendChild(txtP);
-    btnP.onclick = function(){
+    
+    /*var dreP = document.createElement("BUTTON");
+    var drtxtP = document.createTextNode("DIRECTIONS");
+    dreP.appendChild(drtxtP);
+    dreP.onclick = function(){
+        if (control == null)
+        {
+            createRoute(52.1790324, -2.2033975, Loc.lat, Loc.lng);
+            drtxtP.style.color = "blue";   
+        }
+    };
+    namP.appendChild(dreP);*/
+    
+    var dltP = document.createElement("BUTTON");
+    var dtxtP = document.createTextNode("DELETE");
+    dltP.appendChild(dtxtP);
+    dltP.onclick = function(){
         console.log(Pointers.length);
        console.log("DELETE WORKING!!!"); 
        markerGroup.removeLayer(nMarker);
@@ -168,7 +188,7 @@ function createPointer(Name, Loc, Image)
             
         }
     };
-    namP.appendChild(btnP);
+    namP.appendChild(dltP);
     divP.appendChild(namP);
     var nPopup = L.popup()
                     .setContent(divP);
@@ -336,7 +356,6 @@ function shareMap() {
 
 function onLocationError(e) {
     alert(e.message);
-    createMap();
 }
 
 
