@@ -9,8 +9,18 @@
     margin:0px;
     z-index: -1;
 }
-#ShareMap {
+
+/*#ShareMap {
     position: fixed;
     bottom: 0px;
     right: 0px;
+}*/
+
+#footer{
+    position: fixed;
+    
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin-bottom: 0px;
 }

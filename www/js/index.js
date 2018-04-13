@@ -1,7 +1,9 @@
-Backendless.initApp("E81ED314-BB9B-EFD8-FF4C-74A2F7CFC800", "B3B57989-569A-3AB0-FF75-5DE0AB3FB300");
+Backendless.initApp("067F8686-1D56-3920-FF6F-EFB1C9AFEC00", "64260B74-AC20-579E-FF29-6F2DEEC33300");
 
 // Event Listeners for map screen:
 $(document).on("pageshow", "#viewScreen", mapScreen);
+//window.location.href = "#signIn";
+//$(document).on("pageshow", "#signIn", signInScreen);
 
 
 
@@ -19,6 +21,7 @@ var startLocation;
 var Pointers = [];
 var markerGroup; 
 var control;
+var userLocation;
 
 // METHOD: Handles actions on the map screen:
 function mapScreen() {
@@ -28,7 +31,6 @@ function mapScreen() {
     addPointer();
     saveMap();
     loadMap();
-    //createRoute(52.1790324, -2.2033975, 51.5, -0.09);
     shareMap();
 }
 
@@ -43,7 +45,6 @@ function createRoute(lat1, lng1, lat2, lng2) {
     control.hide();
 }
 
-
 //-------------MAP CREATION-------------------//
 function createMap() {
     
@@ -51,17 +52,11 @@ function createMap() {
     
     //mymap.locate({setView: true, maxZoom: 16});
     
-    var marker = L.marker(mymap.getCenter()).addTo(mymap);
+    userLocation = L.marker(mymap.getCenter()).addTo(mymap);
     
     var glcl = google.loader.ClientLocation;
     
-    var onLocationFound = function(e){
-        marker.setLatLng(e.latlng);
-        
-        mymap.setView(marker.getLatLng(), mymap.getZoom());
-        
-        //alert('Marker has been set to position:'+marker.getLatLng().toString());
-    };
+    
     
     /*var circle = L.circle([51.508, -0.11], {
         color: 'blue',
@@ -82,7 +77,7 @@ function createMap() {
         onLocationFound({latlng: [glcl.latitude, glcl.longitude]});
     }else{alert('google.loader.ClientLocation fails');}  
     
-    mymap.locate();
+    mymap.locate({watch: true});
              
     mymap.on('locationerror', onLocationError);
 }
@@ -175,7 +170,8 @@ function createPointer(Name, Loc, Image)
     dreP.onclick = function(){
         if (control == null)
         {
-            createRoute(52.1790324, -2.2033975, Loc.lat, Loc.lng);
+            User = userLocation.getLatLng();
+            createRoute(User.lat, User.lng, Loc.lat, Loc.lng);
             dreP.style.color = "blue";  
         }
         else 
@@ -373,14 +369,62 @@ function shareMap() {
     L.circle(e.latlng, radius).addTo(mymap);
 }*/
 
-function onLocationError(e) {
-    alert(e.message);
+function onLocationFound(e){
+        userLocation.setLatLng(e.latlng);
+        
+        mymap.setView(userLocation.getLatLng(), mymap.getZoom());
+        
+        //alert('Marker has been set to position:'+marker.getLatLng().toString());
 }
 
+function onLocationError(e) {
+    alert(e.message);
+    clearInterval(mapTimer);
+}
 
+//-----------------------------------------------------------------------//
+//----------------SIGN IN SCREEN-----------------------------------------//
+//-----------------------------------------------------------------------//
 
+function signInScreen() {
+    
+    $('#LogIn').on("click", function () {
+        //Backendless.UserService.describeUserClassSync();
+        var Email = $("#EmailNameText").val();
+        var Password = $("#PasswordText").val();
+        console.log(Username);
+        console.log(Password);
+        
+        function userRegistered( user )
+        {
+            console.log("user has been registered");
+        }
+        
+        function gotError( err )
+        {
+            console.log("error message - " + err.message );
+            console.log("error code - " + err.statusCode );
+        }
+        
+        var user = new Backendless.User();
+        user.email = Email;
+        user.password = Password;
+        
+        Backendless.UserService.register( user ).then(userRegistered).catch(gotError);
+        
+    });
+    
+    $('#CreateAccount').on("click", function () {
+        var NewUsername = $("#NewNameText").val();
+        var NewPassword = $("#NewPasswordText").val();
+        console.log(NewUsername);
+        console.log(NewPassword);
+    });
+}
 
-
+function checkResults() {
+    
+}
 
 
 
