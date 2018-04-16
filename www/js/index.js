@@ -1,6 +1,7 @@
 
 Backendless.serverURL = 'https://api.backendless.com';
 Backendless.initApp("067F8686-1D56-3920-FF6F-EFB1C9AFEC00", "64260B74-AC20-579E-FF29-6F2DEEC33300");
+Backendless.a
 
 window.location.href = "#signIn";
 
