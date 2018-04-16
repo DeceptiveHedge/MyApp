@@ -2,22 +2,14 @@
 Backendless.serverURL = 'https://api.backendless.com';
 Backendless.initApp("067F8686-1D56-3920-FF6F-EFB1C9AFEC00", "64260B74-AC20-579E-FF29-6F2DEEC33300");
 
-// Event Listeners for map screen:
+window.location.href = "#signIn";
+
+
+// Event Listener for signIn screen:
+$(document).on("pageshow", "#signIn", signInScreen);
+
+// Event Listener for map screen:
 $(document).on("pageshow", "#viewScreen", mapScreen);
-window.location.href = "#viewScreen";
-//window.location.href = "#signIn";
-//$(document).on("pageshow", "#signIn", signInScreen);
-
-
-
-
-
-
-
-
-$(document).on("pageshow", "#todopage", onPageShow);
-
-$(document).on("click", "#addTaskButton", onAddTask);
 
 var mymap;
 var startLocation;
@@ -454,7 +446,18 @@ function onLocationError(e) {
 
 function signInScreen() {
     
-    var LogInValid = Backendless.UserService.isValidLoginSync();
+    function success(result)
+    {
+        console.log("Is login valid?" + result);
+    }
+    
+    function error(err)
+    {
+        console.log(err.message);
+        console.log(err.statusCode);
+    }
+    
+    var LogInValid = Backendless.UserService.isValidLogin().then(success).catch(error);
     
     if (LogInValid == true)
     {
@@ -480,10 +483,6 @@ function signInScreen() {
             {
                 console.log("error message - " + err.message );
                 console.log("error code - " + err.statusCode );
-                if (err.statusCode = "undefined")
-                {
-                    window.location.href = "#viewScreen";
-                }
             }
         
             Backendless.UserService.login(Email, Password, true).then(LoggedIn).catch(gotError);
@@ -519,61 +518,3 @@ function signInScreen() {
 
 //-----------------------------------------------//
 //----------------------------------------------//
-
-
-
-
-function onPageShow() {
-     console.log("page shown");
-    Backendless.Data.of("Task").find().then(processResults).catch(error);
-    
-}
-
-function onAddTask() {
-    console.log("add task button clicked");
-    
-    var tasktext = $('#TaskText').val();
-    
-    console.log(tasktext);
-    
-    var newTask = {};
-    newTask.Task = tasktext;
-    
-    Backendless.Data.of("Task").save(newTask).then(saved).catch(error);
-    Backendless.Data.of("Task").find().then(processResults).catch(error);
-}
-
-function processResults(tasks) {
-    
-    console.log("processResults");
-    var taskSelect = $("#TaskSelect");
-    
-    // display the first task in an array of tasks.
-    alert(tasks[0].Task);
-    alert(tasks[1].Task);
-    
-    // wipe the list and select menu clean
-    $('#taskList').empty();
-    taskSelect.empty();
-    
-    // add each tasks to list and select menu
-    for (var i = 0; i < tasks.length; i++) {
-        $('#taskList').append("<li>"+tasks[i].Task+"</li");
-        
-        taskSelect.append("<option value='" + tasks[i]+ "'>" + tasks[i] + "</option>");
-    }
-    
-    // refresh the listview
-    $('#taskList').listview('refresh');
-    
-    
-}
-
-function saved(savedTask) {
-    console.log( "new Contact instance has been saved" + savedTask);
-}
-
-function error(err) {
-    alert(err);
-}
-
