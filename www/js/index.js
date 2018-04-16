@@ -1,7 +1,10 @@
+
+Backendless.serverURL = 'https://api.backendless.com';
 Backendless.initApp("067F8686-1D56-3920-FF6F-EFB1C9AFEC00", "64260B74-AC20-579E-FF29-6F2DEEC33300");
 
 // Event Listeners for map screen:
 $(document).on("pageshow", "#viewScreen", mapScreen);
+window.location.href = "#viewScreen";
 //window.location.href = "#signIn";
 //$(document).on("pageshow", "#signIn", signInScreen);
 
@@ -32,6 +35,7 @@ function mapScreen() {
     saveMap();
     loadMap();
     shareMap();
+    logOut();
 }
 
 function createRoute(lat1, lng1, lat2, lng2) {
@@ -347,8 +351,54 @@ function loadMap() {
 
 //-------------SHARE MAP-----------------//
 function shareMap() {
+    var Maplist = document.getElementById("MapList2");
+    
     $('#ShareMap').on("click", function () {
         $("#SharePanel").panel("open");
+        
+        // CLEAR all current options from list
+        for (var i = Maplist.options.length - 1; i >=0; i--)
+        {
+            Maplist.remove(i);
+        }
+        
+        // ADD options for each saved map
+        for (var i=1; (i+1)<=window.localStorage.length; i++)
+        {
+            var getName = window.localStorage.getItem("Map" + i);
+        
+            var mapJSON = JSON.parse(getName);
+            
+            var o = document.createElement("option");
+            o.text = mapJSON.Name;
+            Maplist.add(o); 
+        }
+    });
+    
+    $('#SharePanelMap').on("click", function () {
+        for (var i=1; (i+1)<=window.localStorage.length; i++)
+        {
+            var MapString = window.localStorage.getItem("Map" + i);
+            
+            var mapJSON = JSON.parse(MapString);
+            var mapName = mapJSON.Name;
+            var listName = $("#MapList2").val();
+            
+            if(mapName == listName)
+            {
+            
+                function updateUser(user) {
+                    user.maps = MapString;
+                
+                    return Backendless.UserService.update(user);
+                }
+            
+                var currentUser = Backendless.UserService.getCurrentUserSync();
+            
+                Backendless.UserService.login(currentUser.email, currentUser.password).then(updateUser);
+            
+            }
+        }
     });
     
     $('#CloseShare').on("click", function () {
@@ -359,15 +409,32 @@ function shareMap() {
 
 //-------------------------------------------//
 
-/*function onLocationFound(e) {
-    var radius = e.accuracy / 2;
-    startLocation = e.latlng;
-    console.log(e.latlng);
-    
-   // L.marker(e.latlng).addTo(mymap)
-       // .bindPopup("You are within " + radius + " meters from this point").openPopup();
-    L.circle(e.latlng, radius).addTo(mymap);
-}*/
+//---------LOG OUT---------------------------//
+function logOut(){
+    $('#LogOut').on("click", function () {
+        if (confirm("Are you sure you want to log out?")) {
+            function userLoggedOut()
+            {
+                console.log("Logged out!");
+            }
+            
+            function gotError(err)
+            {
+                console.log("error message - " + err.message);
+                console.log("error code - " + err.statusCode);
+            }
+            
+            Backendless.UserService.logout().then(userLoggedOut).catch(gotError);
+            
+            window.location.href = "#signIn";
+        }
+        else {
+            return;
+        }
+    });
+}
+
+//------------------------------------------//
 
 function onLocationFound(e){
         userLocation.setLatLng(e.latlng);
@@ -379,7 +446,6 @@ function onLocationFound(e){
 
 function onLocationError(e) {
     alert(e.message);
-    clearInterval(mapTimer);
 }
 
 //-----------------------------------------------------------------------//
@@ -388,47 +454,71 @@ function onLocationError(e) {
 
 function signInScreen() {
     
-    $('#LogIn').on("click", function () {
-        //Backendless.UserService.describeUserClassSync();
-        var Email = $("#EmailNameText").val();
-        var Password = $("#PasswordText").val();
-        console.log(Username);
-        console.log(Password);
-        
-        function userRegistered( user )
-        {
-            console.log("user has been registered");
-        }
-        
-        function gotError( err )
-        {
-            console.log("error message - " + err.message );
-            console.log("error code - " + err.statusCode );
-        }
-        
-        var user = new Backendless.User();
-        user.email = Email;
-        user.password = Password;
-        
-        Backendless.UserService.register( user ).then(userRegistered).catch(gotError);
-        
-    });
+    var LogInValid = Backendless.UserService.isValidLoginSync();
     
-    $('#CreateAccount').on("click", function () {
-        var NewUsername = $("#NewNameText").val();
-        var NewPassword = $("#NewPasswordText").val();
-        console.log(NewUsername);
-        console.log(NewPassword);
-    });
+    if (LogInValid == true)
+    {
+        window.location.href = "#viewScreen";
+    }
+    else
+    {
+        $('#LogIn').on("click", function () {
+        
+            var Email = $("#EmailNameText").val();
+            var Password = $("#PasswordText").val();
+            console.log(Email);
+            console.log(Password);
+        
+            function LoggedIn(user)
+            {
+                console.log("user has logged in")
+                window.location.href = "#viewScreen";
+            
+            }
+        
+            function gotError(err)
+            {
+                console.log("error message - " + err.message );
+                console.log("error code - " + err.statusCode );
+                if (err.statusCode = "undefined")
+                {
+                    window.location.href = "#viewScreen";
+                }
+            }
+        
+            Backendless.UserService.login(Email, Password, true).then(LoggedIn).catch(gotError);
+        
+        
+        });
+    
+        $('#CreateAccount').on("click", function () {
+            var NewEmail = $("#NewEmailText").val();
+            var NewPassword = $("#NewPasswordText").val();
+            console.log(NewEmail);
+            console.log(NewPassword);
+        
+            function userRegistered( user )
+            {
+                console.log("user has been registered");
+            }
+        
+            function gotError( err )
+            {
+                console.log("error message - " + err.message );
+                console.log("error code - " + err.statusCode );
+            }
+        
+            var user = new Backendless.User();
+            user.email = NewEmail;
+            user.password = NewPassword;
+        
+            Backendless.UserService.register( user ).then(userRegistered).catch(gotError);
+        });
+    }
 }
 
-function checkResults() {
-    
-}
-
-
-
-
+//-----------------------------------------------//
+//----------------------------------------------//
 
 
 

@@ -38,7 +38,8 @@
     
      <div data-role="footer">
         <button id="LoadMap">Load Map</button>
-        <button id="ShareMap">Share Map</button>    
+        <button id="ShareMap">Share Map</button>
+        <button id="LogOut">Log Out</button>
      </div>
     
     
@@ -100,11 +101,13 @@
         <h3>Share Map</h3>
         <table>
             <tr>
-                <td><label for="UserName">Username:</label></td>
-                <td><input type="text" name="muser input" id="UserName" value="" />
+                <td><label for="EmailName">Email:</label></td>
+                <td><input type="text" name="memail input" id="EmailName" value="" />
                 </td>
             </tr>
         </table>
+        <select id="MapList2">
+        </select>
         <button id=SharePanelMap>Share Map</button>
         <button id="CloseShare">Close</button>
     </div>
@@ -125,8 +128,8 @@
         
         <table>
             <tr>
-                <td><label for="UserNameText" >Username:</label></td>
-                <td><input type="text" name="userinput" id="UserNameText" value="" /></td>
+                <td><label for="EmailNameText" >Email:</label></td>
+                <td><input type="text" name="emailinput" id="EmailNameText" value="" /></td>
                 <td></td>
                 <td><label for="PasswordText">Password:</label></td>
                 <td><input type="text" name="passwordinput" id="PasswordText" value"" /></td>
@@ -139,11 +142,11 @@
         
         <table>
             <tr>
-                <td><label for="NewNameText" >New Username:</label></td>
-                <td><input type="text" name="newNameInput" id="NewNameText" value="" /></td>
+                <td><label for="NewEmailText" >Email:</label></td>
+                <td><input type="text" name="newEmailInput" id="NewEmailText" value="" /></td>
             </tr>
             <tr>
-                <td><label for="NewPasswordText" >New Password:</label></td>
+                <td><label for="NewPasswordText" >Password:</label></td>
                 <td><input type="text" name="newPasswordInput" id="NewPasswordText" value="" /></td>
             </tr>
             <tr>

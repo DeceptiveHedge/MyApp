@@ -10,11 +10,11 @@
     z-index: -1;
 }
 
-/*#ShareMap {
-    position: fixed;
+/#LogOut{
+    
     bottom: 0px;
     right: 0px;
-}*/
+}
 
 #footer{
     position: fixed;
