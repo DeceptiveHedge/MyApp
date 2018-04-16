@@ -474,15 +474,15 @@ function signInScreen() {
         
             function LoggedIn(user)
             {
-                console.log("user has logged in")
+                alert("user has logged in")
                 window.location.href = "#viewScreen";
             
             }
         
             function gotError(err)
             {
-                console.log("error message - " + err.message );
-                console.log("error code - " + err.statusCode );
+                alert("error message - " + err.message );
+                alert("error code - " + err.statusCode );
             }
         
             Backendless.UserService.login(Email, Password, true).then(LoggedIn).catch(gotError);
@@ -499,11 +499,12 @@ function signInScreen() {
             function userRegistered( user )
             {
                 console.log("user has been registered");
+                window.location.href = "#viewScreen";
             }
         
             function gotError( err )
             {
-                console.log("error message - " + err.message );
+                alert("error message - " + err.message );
                 console.log("error code - " + err.statusCode );
             }
         
