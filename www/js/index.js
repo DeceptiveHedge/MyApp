@@ -3,7 +3,7 @@ Backendless.serverURL = 'https://api.backendless.com';
 Backendless.initApp("067F8686-1D56-3920-FF6F-EFB1C9AFEC00", "64260B74-AC20-579E-FF29-6F2DEEC33300");
 Backendless.a
 
-window.location.href = "#signIn";
+window.location.href = "#viewScreen";
 
 
 // Event Listener for signIn screen:
@@ -18,12 +18,24 @@ var Pointers = [];
 var markerGroup; 
 var control;
 var userLocation;
+var clicked;
 
 // METHOD: Handles actions on the map screen:
 function mapScreen() {
 
     createMap();
     markerGroup = L.layerGroup().addTo(mymap);
+    
+    $('#Locate').on("click", function() {
+        var color = clicked ? 'black' : 'blue';
+        var locateUser = clicked ? 'false' : 'true';
+        
+        $(this).css('color', color);
+        mymap.locate({watch: locateUser});
+        
+        clicked = !clicked;
+    });
+    
     addPointer();
     saveMap();
     loadMap();
@@ -47,20 +59,12 @@ function createMap() {
     
     mymap = L.map('map').setView([51.505, -0.09], 13);
     
+    
     //mymap.locate({setView: true, maxZoom: 16});
     
     userLocation = L.marker(mymap.getCenter()).addTo(mymap);
     
     var glcl = google.loader.ClientLocation;
-    
-    
-    
-    /*var circle = L.circle([51.508, -0.11], {
-        color: 'blue',
-        fillColor: '#f03',
-        fillOpacity: 0.5,
-        radius: 500
-    }).addTo(mymap);*/
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGVjZXB0aXZlaGVkZ2UiLCJhIjoiY2plZTZ5ajRmMTM3NTJ4bzlzNGQwdGtlYyJ9.Ehp7SAyfmfmA9RvFrw_Upg', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 18,
@@ -74,7 +78,7 @@ function createMap() {
         onLocationFound({latlng: [glcl.latitude, glcl.longitude]});
     }else{alert('google.loader.ClientLocation fails');}  
     
-    mymap.locate({watch: true});
+    mymap.locate();
              
     mymap.on('locationerror', onLocationError);
 }
@@ -133,7 +137,7 @@ function addPointer() {
             if (MarkerPlaced == false)
             {
                 console.log("Double Click on map");
-                createPointer(IconName, e.latlng, $("#PanelImage").attr('src'));
+                createPointer(IconName, e.latlng, $("#PanelImage").attr('src'), CheckValue);
                 MarkerPlaced = true;
             }
         });
@@ -151,59 +155,93 @@ function addPointer() {
 //---------------CREATE POINTER-----------------------//
 
 
-function createPointer(Name, Loc, Image)
+function createPointer(Name, Loc, Image, Checked)
 {
     console.log(Loc);
     var nIcon = L.icon({iconUrl: Image, iconSize: [38, 38], iconAnchor: [12, 12]});
     
-    // CREATE popup content, then SET content to popup:
-    var divP = document.createElement("div");
-    var namP = document.createElement("p");
-    namP.innerHTML = "<b>" + Name + "</b></br>";
+    var nPopup;
     
-    var dreP = document.createElement("BUTTON");
-    var drtxtP = document.createTextNode("DIRECTIONS");
-    dreP.appendChild(drtxtP);
-    dreP.onclick = function(){
-        if (control == null)
-        {
-            User = userLocation.getLatLng();
-            createRoute(User.lat, User.lng, Loc.lat, Loc.lng);
-            dreP.style.color = "blue";  
-        }
-        else 
-        {
-            mymap.removeControl(control);
-            control = null;
-            dreP.style.color = "black";
-        }
-        
-    };
-    namP.appendChild(dreP);
+    if (Checked == false)
+    {
     
-    var dltP = document.createElement("BUTTON");
-    var dtxtP = document.createTextNode("DELETE");
-    dltP.appendChild(dtxtP);
-    dltP.onclick = function(){
-        console.log(Pointers.length);
-       console.log("DELETE WORKING!!!"); 
-       markerGroup.removeLayer(nMarker);
-        
-        for (var i=0; i<Pointers.length; i++)
-        {
-            dPointer = JSON.parse(Pointers[i]);
-            if (Name == dPointer.IconName)
+        // CREATE popup content, then SET content to popup:
+        var divP = document.createElement("div");
+        var namP = document.createElement("p");
+        namP.innerHTML = "<b>" + Name + "</b></br>";
+    
+        var dreP = document.createElement("BUTTON");
+        var drtxtP = document.createTextNode("DIRECTIONS");
+        dreP.appendChild(drtxtP);
+        dreP.onclick = function(){
+            if (control == null)
             {
-               Pointers.splice(i,1); 
+                User = userLocation.getLatLng();
+                createRoute(User.lat, User.lng, Loc.lat, Loc.lng);
+                dreP.style.color = "blue";  
             }
+            else 
+            {
+                mymap.removeControl(control);
+                control = null;
+                dreP.style.color = "black";
+            }
+        
+        };
+        namP.appendChild(dreP);
+    
+        var dltP = document.createElement("BUTTON");
+        var dtxtP = document.createTextNode("DELETE");
+        dltP.appendChild(dtxtP);
+        dltP.onclick = function(){
             console.log(Pointers.length);
-            
-        }
-    };
-    namP.appendChild(dltP);
-    divP.appendChild(namP);
-    var nPopup = L.popup()
+            console.log("DELETE WORKING!!!"); 
+            markerGroup.removeLayer(nMarker);
+        
+            for (var i=0; i<Pointers.length; i++)
+            {
+                dPointer = JSON.parse(Pointers[i]);
+                if (Name == dPointer.IconName)
+                {
+                    Pointers.splice(i,1); 
+                }
+                console.log(Pointers.length);
+            }
+        };
+        namP.appendChild(dltP);
+        divP.appendChild(namP);
+        nPopup = L.popup()
                     .setContent(divP);
+    }
+    else
+    {
+        var circle = L.circle(Loc, {
+            color: 'blue',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 250
+        }).addTo(mymap);
+        
+        nPopup = L.popup().setContent(Name);
+        
+        userLocation.on("move", function () {
+            var userLoc = userLocation.getLatLng();
+            if((userLoc < Loc + 500) && (userLoc > Loc - 500))
+            {
+                markerGroup.removeLayer(nMarker);
+        
+                for (var i=0; i<Pointers.length; i++)
+                {
+                    dPointer = JSON.parse(Pointers[i]);
+                    if (Name == dPointer.IconName)
+                    {
+                        Pointers.splice(i,1); 
+                    }
+                    console.log(Pointers.length);
+                }
+            }
+        });
+    }
     
                 
     var nMarker = L.marker(Loc, {icon: nIcon}).addTo(markerGroup).bindPopup(nPopup);
@@ -211,7 +249,8 @@ function createPointer(Name, Loc, Image)
     var pointerDetail = {
                     "IconUrl": Image,
                     "IconName": Name,
-                    "Location": Loc
+                    "Location": Loc,
+                    "Checked?": Checked
                 };
                 
     var nPointer = JSON.stringify(pointerDetail);
@@ -346,13 +385,19 @@ function loadMap() {
 function shareMap() {
     var Maplist = document.getElementById("MapList2");
     
+    var Maplist2 = document.getElementById("MapList3");
+    
     $('#ShareMap').on("click", function () {
         $("#SharePanel").panel("open");
         
-        // CLEAR all current options from list
+        // CLEAR all current options from lists
         for (var i = Maplist.options.length - 1; i >=0; i--)
         {
             Maplist.remove(i);
+        }
+        for (var i = Maplist.options.length -1; i >=0; i--)
+        {
+            Maplist2.remove(i);
         }
         
         // ADD options for each saved map
@@ -366,6 +411,26 @@ function shareMap() {
             o.text = mapJSON.Name;
             Maplist.add(o); 
         }
+        
+        Backendless.Data.of("SharedMaps").find().then(displayMaps).catch(error);
+        
+        function displayMaps(maps) {
+            console.log(maps);
+            
+            for (var i=0; i < maps.length; i++)
+            {
+                var getName = maps[i].Maps;
+                
+                var mapJSON = JSON.parse(getName);
+                
+                var o = document.createElement("option");
+                o.text = mapJSON.Name;
+                
+                Maplist2.addTo(o);
+            }
+        }
+        
+        
     });
     
     $('#SharePanelMap').on("click", function () {
@@ -380,16 +445,13 @@ function shareMap() {
             if(mapName == listName)
             {
             
-                function updateUser(user) {
-                    user.maps = MapString;
+                var newMap = {};
+                newMap.Maps = MapString;
+                Backendless.Data.of("SharedMaps").save(newMap).then(saved).catch(error);
                 
-                    return Backendless.UserService.update(user);
+                function saved() {
+                    console.log("new map has been saved");
                 }
-            
-                var currentUser = Backendless.UserService.getCurrentUserSync();
-            
-                Backendless.UserService.login(currentUser.email, currentUser.password).then(updateUser);
-            
             }
         }
     });
@@ -397,6 +459,10 @@ function shareMap() {
     $('#CloseShare').on("click", function () {
         $("#SharePanel").panel("close");
     });
+    
+    function error(e) {
+        console.log(e);
+    }
 }
 
 
