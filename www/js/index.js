@@ -268,7 +268,7 @@ function saveMap() {
     $('#SaveMap').on("click", function () {
         console.log("detect this");
         $("#SavePanel").panel("open");
-        console.log("There are " + window.localStorage.length + " items.");
+        alert("There are " + window.localStorage.length + " items.");
         console.log(Pointers);
     });
     
@@ -338,38 +338,46 @@ function loadMap() {
     
     $('#LoadPanelMap').on("click", function () {
         console.log(window.localStorage.length);
+        var Loaded = false;
+        
         for (var i=1; (i+1)<=window.localStorage.length; i++)
         {
-            console.log(window.localStorage.length);
-            var MapString = window.localStorage.getItem("Map" + i);
-            var mapJSON = JSON.parse(MapString);
-            var mapName = mapJSON.Name;
-            var listName = $("#MapList").val();
-            
-            if (mapName == listName)
+            if (Loaded == false)
             {
-                console.log(mapName + " = " + listName);
-                var latitude = mapJSON.Latitude;
-                var longitude = mapJSON.Longitude;
-                var pointersJSON = mapJSON.Pointers;
-                console.log(pointersJSON);
-                document.getElementById('MapHeading').innerHTML = mapName; 
-                
-                // CLEAR existing pointers on map and array:
-                Pointers = [];
-                markerGroup.clearLayers();
-                
-                
-                // LOAD all pointers onto map:
-                for (var i = 0; i < pointersJSON.length; i++)
+             console.log(window.localStorage.length);
+                var MapString = window.localStorage.getItem("Map" + i);
+                var mapJSON = JSON.parse(MapString);
+                var mapName = mapJSON.Name;
+                var listName = $("#MapList").val();
+            
+                if (mapName == listName)
                 {
-                    var pJSON = JSON.parse(pointersJSON[i]);
-                    var pName = pJSON.IconName;
-                    var pLoc = pJSON.Location;
-                    var pImage = pJSON.IconUrl;
-                    var pChecked = pJSON.Checked;
+                    console.log(mapName + " = " + listName);
+                    var latitude = mapJSON.Latitude;
+                    var longitude = mapJSON.Longitude;
+                    var pointersJSON = mapJSON.Pointers;
+                    console.log(pointersJSON);
+                    document.getElementById('MapHeading').innerHTML = mapName; 
+                
+                    // CLEAR existing pointers on map and array:
+                    Pointers = [];
+                    markerGroup.clearLayers();
+                
+                
+                    // LOAD all pointers onto map:
+                    for (var i = 0; i < pointersJSON.length; i++)
+                    {
+                        var pJSON = JSON.parse(pointersJSON[i]);
+                        var pName = pJSON.IconName;
+                        var pLoc = pJSON.Location;
+                        var pImage = pJSON.IconUrl;
+                        var pChecked = pJSON.Checked;
                     
-                    createPointer(pName, pLoc, pImage, pChecked);
+                        createPointer(pName, pLoc,      
+                        pImage, pChecked);
+                    }
+                    
+                    Loaded = true;
                 }
             }
                
