@@ -64,6 +64,8 @@ function createMap() {
     
     userLocation = L.marker(mymap.getCenter()).addTo(mymap);
     
+    startLocation = userLocation.getLatLng();
+    
     var glcl = google.loader.ClientLocation;
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGVjZXB0aXZlaGVkZ2UiLCJhIjoiY2plZTZ5ajRmMTM3NTJ4bzlzNGQwdGtlYyJ9.Ehp7SAyfmfmA9RvFrw_Upg', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -250,7 +252,7 @@ function createPointer(Name, Loc, Image, Checked)
                     "IconUrl": Image,
                     "IconName": Name,
                     "Location": Loc,
-                    "Checked?": Checked
+                    "Checked": Checked
                 };
                 
     var nPointer = JSON.stringify(pointerDetail);
@@ -335,8 +337,10 @@ function loadMap() {
     });
     
     $('#LoadPanelMap').on("click", function () {
+        console.log(window.localStorage.length);
         for (var i=1; (i+1)<=window.localStorage.length; i++)
         {
+            console.log(window.localStorage.length);
             var MapString = window.localStorage.getItem("Map" + i);
             var mapJSON = JSON.parse(MapString);
             var mapName = mapJSON.Name;
@@ -344,6 +348,7 @@ function loadMap() {
             
             if (mapName == listName)
             {
+                console.log(mapName + " = " + listName);
                 var latitude = mapJSON.Latitude;
                 var longitude = mapJSON.Longitude;
                 var pointersJSON = mapJSON.Pointers;
@@ -362,8 +367,9 @@ function loadMap() {
                     var pName = pJSON.IconName;
                     var pLoc = pJSON.Location;
                     var pImage = pJSON.IconUrl;
+                    var pChecked = pJSON.Checked;
                     
-                    createPointer(pName, pLoc, pImage);
+                    createPointer(pName, pLoc, pImage, pChecked);
                 }
             }
                
