@@ -1,9 +1,8 @@
 
 Backendless.serverURL = 'https://api.backendless.com';
 Backendless.initApp("067F8686-1D56-3920-FF6F-EFB1C9AFEC00", "64260B74-AC20-579E-FF29-6F2DEEC33300");
-Backendless.a
 
-window.location.href = "#viewScreen";
+window.location.href = "#signIn";
 
 
 // Event Listener for signIn screen:
@@ -18,22 +17,31 @@ var Pointers = [];
 var markerGroup; 
 var control;
 var userLocation;
-var clicked;
+var Locate = false;
 
 // METHOD: Handles actions on the map screen:
 function mapScreen() {
+    
+     $("#LoadPanel").on("panelbeforeopen", function() {
+        console.log('LoadPanel open');
+    });
 
     createMap();
     markerGroup = L.layerGroup().addTo(mymap);
     
     $('#Locate').on("click", function() {
-        var color = clicked ? 'black' : 'blue';
-        var locateUser = clicked ? 'false' : 'true';
-        
-        $(this).css('color', color);
-        mymap.locate({watch: locateUser});
-        
-        clicked = !clicked;
+        if (Locate == false)
+        {
+            $(this).css('color', 'blue');
+            mymap.locate({watch: true});
+            Locate = true;
+        }
+        else
+        {
+            $(this).css('color', 'black');
+            mymap.locate({setView: false, watch: false});
+            Locate = false;
+        }
     });
     
     addPointer();
@@ -212,6 +220,9 @@ function createPointer(Name, Loc, Image, Checked)
         };
         namP.appendChild(dltP);
         divP.appendChild(namP);
+        
+        
+        
         nPopup = L.popup()
                     .setContent(divP);
     }
@@ -227,6 +238,7 @@ function createPointer(Name, Loc, Image, Checked)
         nPopup = L.popup().setContent(Name);
         
         userLocation.on("move", function () {
+            console.log("user location has changed");
             var userLoc = userLocation.getLatLng();
             if((userLoc < Loc + 500) && (userLoc > Loc - 500))
             {
@@ -312,7 +324,8 @@ function saveMap() {
 
 //--------------LOAD MAP-------------------------//
 function loadMap() {
-    var Maplist = document.getElementById("MapList");
+   var Maplist = document.getElementById("MapList");
+    
     
     $('#LoadMap').on("click", function () {
         $("#LoadPanel").panel("open");
@@ -332,8 +345,13 @@ function loadMap() {
             
             var o = document.createElement("option");
             o.text = mapJSON.Name;
-            Maplist.add(o);   
+            if ( i == 1)
+            {
+                o.setAttribute("selected", "selected");
+            }
+            Maplist.add(o); 
         }
+        
     });
     
     $('#LoadPanelMap').on("click", function () {
@@ -440,7 +458,7 @@ function shareMap() {
                 var o = document.createElement("option");
                 o.text = mapJSON.Name;
                 
-                Maplist2.addTo(o);
+                Maplist2.add(o);
             }
         }
         
@@ -464,10 +482,14 @@ function shareMap() {
                 Backendless.Data.of("SharedMaps").save(newMap).then(saved).catch(error);
                 
                 function saved() {
-                    console.log("new map has been saved");
+                    alert("New map has been shared.");
                 }
             }
         }
+    });
+    
+    $('#LoadSharedMap').on("click", function () {
+        
     });
     
     $('#CloseShare').on("click", function () {
@@ -530,6 +552,11 @@ function signInScreen() {
     function success(result)
     {
         console.log("Is login valid?" + result);
+        
+        if(result == true)
+        {
+            window.location.href = "#viewScreen";
+        }
     }
     
     function error(err)
@@ -555,7 +582,7 @@ function signInScreen() {
         
             function LoggedIn(user)
             {
-                alert("user has logged in")
+                alert("user has logged in");
                 window.location.href = "#viewScreen";
             
             }
@@ -597,6 +624,9 @@ function signInScreen() {
         });
     }
 }
+
+
+
 
 //-----------------------------------------------//
 //----------------------------------------------//
