@@ -1,7 +1,6 @@
 
 Backendless.serverURL = 'https://api.backendless.com';
 Backendless.initApp("067F8686-1D56-3920-FF6F-EFB1C9AFEC00", "64260B74-AC20-579E-FF29-6F2DEEC33300");
-Backendless.a
 
 window.location.href = "#signIn";
 
@@ -23,6 +22,10 @@ var showLocation = true;
 
 // METHOD: Handles actions on the map screen:
 function mapScreen() {
+    
+     $("#LoadPanel").on("panelbeforeopen", function() {
+        console.log('LoadPanel open');
+    });
 
     createMap();
     markerGroup = L.layerGroup().addTo(mymap);
@@ -38,7 +41,6 @@ function mapScreen() {
         console.log("Watch is " + locateUser + " and setView is " + view);
         
         clicked = !clicked;
-        
     });
     
     addPointer();
@@ -217,6 +219,9 @@ function createPointer(Name, Loc, Image, Checked)
         };
         namP.appendChild(dltP);
         divP.appendChild(namP);
+        
+        
+        
         nPopup = L.popup()
                     .setContent(divP);
     }
@@ -232,6 +237,7 @@ function createPointer(Name, Loc, Image, Checked)
         nPopup = L.popup().setContent(Name);
         
         userLocation.on("move", function () {
+            console.log("user location has changed");
             var userLoc = userLocation.getLatLng();
             if((userLoc < Loc + 500) && (userLoc > Loc - 500))
             {
@@ -317,7 +323,8 @@ function saveMap() {
 
 //--------------LOAD MAP-------------------------//
 function loadMap() {
-    var Maplist = document.getElementById("MapList");
+   var Maplist = document.getElementById("MapList");
+    
     
     $('#LoadMap').on("click", function () {
         $("#LoadPanel").panel("open");
@@ -337,8 +344,13 @@ function loadMap() {
             
             var o = document.createElement("option");
             o.text = mapJSON.Name;
-            Maplist.add(o);   
+            if ( i == 1)
+            {
+                o.setAttribute("selected", "selected");
+            }
+            Maplist.add(o); 
         }
+        
     });
     
     $('#LoadPanelMap').on("click", function () {
@@ -469,7 +481,7 @@ function shareMap() {
                 Backendless.Data.of("SharedMaps").save(newMap).then(saved).catch(error);
                 
                 function saved() {
-                    console.log("new map has been saved");
+                    alert("New map has been shared.");
                 }
             }
         }
@@ -590,7 +602,8 @@ function signInScreen() {
     function success(result)
     {
         console.log("Is login valid?" + result);
-        if (result == true)
+        
+        if(result == true)
         {
             window.location.href = "#viewScreen";
         }
@@ -619,7 +632,7 @@ function signInScreen() {
         
             function LoggedIn(user)
             {
-                alert("user has logged in")
+                alert("user has logged in");
                 window.location.href = "#viewScreen";
             
             }
@@ -661,6 +674,9 @@ function signInScreen() {
         });
     }
 }
+
+
+
 
 //-----------------------------------------------//
 //----------------------------------------------//
