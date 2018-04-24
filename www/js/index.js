@@ -414,7 +414,7 @@ function shareMap() {
         {
             Maplist.remove(i);
         }
-        for (var i = Maplist.options.length -1; i >=0; i--)
+        for (var i = Maplist2.options.length -1; i >=0; i--)
         {
             Maplist2.remove(i);
         }
