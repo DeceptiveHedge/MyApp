@@ -38,6 +38,7 @@ function mapScreen() {
         console.log("Watch is " + locateUser + " and setView is " + view);
         
         clicked = !clicked;
+        
     });
     
     addPointer();
