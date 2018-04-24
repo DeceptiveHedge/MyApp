@@ -3,7 +3,7 @@ Backendless.serverURL = 'https://api.backendless.com';
 Backendless.initApp("067F8686-1D56-3920-FF6F-EFB1C9AFEC00", "64260B74-AC20-579E-FF29-6F2DEEC33300");
 Backendless.a
 
-window.location.href = "#viewScreen";
+window.location.href = "#signIn";
 
 
 // Event Listener for signIn screen:
@@ -19,6 +19,7 @@ var markerGroup;
 var control;
 var userLocation;
 var clicked;
+var showLocation = true;
 
 // METHOD: Handles actions on the map screen:
 function mapScreen() {
@@ -28,10 +29,13 @@ function mapScreen() {
     
     $('#Locate').on("click", function() {
         var color = clicked ? 'black' : 'blue';
-        var locateUser = clicked ? 'false' : 'true';
+        var locateUser = clicked ? false : true;
+        var view = clicked ? false : true;
+        showLocation = clicked ? false : true;
         
         $(this).css('color', color);
-        mymap.locate({watch: locateUser});
+        mymap.locate({watch: locateUser, setView: view});
+        console.log("Watch is " + locateUser + " and setView is " + view);
         
         clicked = !clicked;
     });
@@ -440,7 +444,7 @@ function shareMap() {
                 var o = document.createElement("option");
                 o.text = mapJSON.Name;
                 
-                Maplist2.addTo(o);
+                Maplist2.add(o);
             }
         }
         
@@ -468,6 +472,61 @@ function shareMap() {
                 }
             }
         }
+    });
+    
+    $('#LoadSharedMap').on("click", function () {
+        var Loaded = false;
+        
+        Backendless.Data.of("SharedMaps").find().then(loadMaps).catch(error);
+        
+        function loadMaps(maps) {
+            console.log(maps);
+            
+            for (var i=0; i < maps.length; i++)
+            {
+                if (Loaded == false)
+                {
+                    var MapString = maps[i].Maps;
+                    
+                    var mapJSON = JSON.parse(MapString);
+                    
+                    var mapName = mapJSON.Name;
+                    
+                    var listName = $("#MapList3").val();
+                    
+                    if (mapName == listName)
+                    {
+                        console.log(mapName + " = " + listName);
+                        var latitude = mapJSON.Latitude;
+                        var longitude = mapJSON.Longitude;
+                        var pointersJSON = mapJSON.Pointers;
+                        console.log(pointersJSON);
+                        document.getElementById('MapHeading').innerHTML = mapName; 
+                
+                        // CLEAR existing pointers on map and array:
+                        Pointers = [];
+                        markerGroup.clearLayers();
+                
+                
+                        // LOAD all pointers onto map:
+                        for (var i = 0; i < pointersJSON.length; i++)
+                        {
+                            var pJSON = JSON.parse(pointersJSON[i]);
+                            var pName = pJSON.IconName;
+                            var pLoc = pJSON.Location;
+                            var pImage = pJSON.IconUrl;
+                            var pChecked = pJSON.Checked;
+                    
+                            createPointer(pName, pLoc,      
+                            pImage, pChecked);
+                        }
+                    
+                        Loaded = true;
+                    }
+                }  
+            }
+        }
+        $("#SharePanel").panel("close");
     });
     
     $('#CloseShare').on("click", function () {
@@ -510,11 +569,11 @@ function logOut(){
 //------------------------------------------//
 
 function onLocationFound(e){
-        userLocation.setLatLng(e.latlng);
-        
+    userLocation.setLatLng(e.latlng);
+    if (showLocation == true)
+    {   
         mymap.setView(userLocation.getLatLng(), mymap.getZoom());
-        
-        //alert('Marker has been set to position:'+marker.getLatLng().toString());
+    }
 }
 
 function onLocationError(e) {
@@ -530,6 +589,10 @@ function signInScreen() {
     function success(result)
     {
         console.log("Is login valid?" + result);
+        if (result == true)
+        {
+            window.location.href = "#viewScreen";
+        }
     }
     
     function error(err)
