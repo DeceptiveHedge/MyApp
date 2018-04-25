@@ -227,19 +227,13 @@ function createPointer(Name, Loc, Image, Checked)
     }
     else
     {
-        var circle = L.circle(Loc, {
-            color: 'blue',
-            fillColor: '#f03',
-            fillOpacity: 0.5,
-            radius: 250
-        }).addTo(mymap);
-        
         nPopup = L.popup().setContent(Name);
+        var checkMove = true;
         
-        userLocation.on("move", function () {
-            console.log("user location has changed");
+        userLocation.on("move", function (e) {
             var userLoc = userLocation.getLatLng();
-            if((userLoc < Loc + 500) && (userLoc > Loc - 500))
+            
+            if((userLoc.lat < Loc.lat + 0.00014) && (userLoc.lat > Loc.lat - 0.00014) && (userLoc.lng < Loc.lng + 0.00014) && (userLoc.lng > Loc.lng - 0.00014))
             {
                 markerGroup.removeLayer(nMarker);
         
@@ -248,7 +242,9 @@ function createPointer(Name, Loc, Image, Checked)
                     dPointer = JSON.parse(Pointers[i]);
                     if (Name == dPointer.IconName)
                     {
-                        Pointers.splice(i,1); 
+                        Pointers.splice(i,1);
+                        checkMove = false;
+                        return
                     }
                     console.log(Pointers.length);
                 }
@@ -279,7 +275,7 @@ function saveMap() {
     $('#SaveMap').on("click", function () {
         console.log("detect this");
         $("#SavePanel").panel("open");
-        alert("There are " + window.localStorage.length + " items.");
+        console.log("There are " + window.localStorage.length + " items.");
         console.log(Pointers);
     });
     
@@ -585,7 +581,8 @@ function onLocationFound(e){
     userLocation.setLatLng(e.latlng);
     if (showLocation == true)
     {   
-        mymap.setView(userLocation.getLatLng(), mymap.getZoom());
+        mymap.setView(userLocation.getLatLng(),
+                      mymap.getZoom());
     }
 }
 
