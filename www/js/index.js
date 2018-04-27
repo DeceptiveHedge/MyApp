@@ -345,6 +345,7 @@ function loadMap() {
             var getName = window.localStorage.getItem("Map" + i);
         
             var mapJSON = JSON.parse(getName);
+            alert(mapJSON.Name);
             
             var o = document.createElement("option");
             o.text = mapJSON.Name;
