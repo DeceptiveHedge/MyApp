@@ -324,13 +324,13 @@ function loadMap() {
     
     $('#LoadMap').on("click", function () {
         $("#LoadPanel").panel("open");
-        
+        alert("panel open");
         // CLEAR all current options from list
         for (var i = Maplist.options.length - 1; i >=0; i--)
         {
             Maplist.remove(i);
         }
-        
+        alert(window.localStorage.length);
         // ADD options for each saved map
         for (var i=1; (i+1)<=window.localStorage.length; i++)
         {
@@ -344,7 +344,8 @@ function loadMap() {
             {
                 o.setAttribute("selected", "selected");
             }
-            Maplist.add(o); 
+            Maplist.add(o);
+            alert("Map " + i + " is added");
         }
         
         Maplist.selectedIndex = -1;
