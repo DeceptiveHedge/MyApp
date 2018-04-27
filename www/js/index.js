@@ -302,6 +302,7 @@ function saveMap() {
         
             localStorage.setItem(nKey, nMap);
             
+            alert(window.localStorage.length);
             document.getElementById('MapHeading').innerHTML = MapName;
             
             $("#SavePanel").panel("close");
