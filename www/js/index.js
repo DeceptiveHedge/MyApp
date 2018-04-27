@@ -324,13 +324,13 @@ function loadMap() {
     
     $('#LoadMap').on("click", function () {
         $("#LoadPanel").panel("open");
-        alert("panel open");
+        
         // CLEAR all current options from list
         for (var i = Maplist.options.length - 1; i >=0; i--)
         {
             Maplist.remove(i);
         }
-        alert(window.localStorage.length);
+        
         // ADD options for each saved map
         for (var i=1; (i+1)<=window.localStorage.length; i++)
         {
@@ -344,11 +344,8 @@ function loadMap() {
             {
                 o.setAttribute("selected", "selected");
             }
-            Maplist.add(o);
-            alert("Map " + i + " is added");
+            Maplist.add(o); 
         }
-        
-        Maplist.selectedIndex = -1;
         
     });
     
@@ -402,48 +399,12 @@ function loadMap() {
         $("#LoadPanel").panel("close");
     });
     
-    $('#DeleteMap').on("click", function () {
-        console.log(window.localStorage.length);
-        var Deleted = false;
-        
-        for (var i=1; (i+1)<=window.localStorage.length; i++)
-        {
-            if (Deleted == false)
-            {
-                var MapString = window.localStorage.getItem("Map" + i);
-                var mapJSON = JSON.parse(MapString);
-                var mapName = mapJSON.Name;
-                var listName = $("#MapList").val();
-            
-                if (mapName == listName)
-                {
-                    window.localStorage.removeItem("Map" + i);
-                    
-                    var Removed = false;
-                    for (var a = Maplist.options.length - 1; a >=0; a--)
-                    {
-                        if (Removed == false)
-                        {
-                            if (Maplist.options[a].text == listName)
-                            {
-                                Maplist.remove(a);
-                                Removed = true;
-                            }
-                        }
-                    }
-                    
-                    Maplist.selectedIndex = -1;
-                    
-                    Deleted = true;
-                    console.log(window.localStorage.length)
-                }
-            }
-               
-        }
-    });
-    
     $('#CloseLoad').on("click", function () {
         $("#LoadPanel").panel("close");
+    });
+    
+    $('#DeleteAll').on("click", function () {
+        window.localStorage.clear();
     });
 }
 
@@ -496,7 +457,7 @@ function shareMap() {
             }
         }
         
-        Maplist.selectedIndex = -1;
+        
     });
     
     $('#SharePanelMap').on("click", function () {
