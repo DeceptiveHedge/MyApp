@@ -2,6 +2,7 @@ HOW TO DOWNLOAD:
 Platform: Android
 Device: Samsung 
 File: apk
+Path: phonegap build
 Download onto phone and run download manager.
 
 HOW TO USE:
