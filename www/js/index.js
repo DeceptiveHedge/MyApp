@@ -278,8 +278,6 @@ function saveMap() {
     // EVENT HANDLER loads save panel when "Save Map" button is clicked:
     $('#SaveMap').on("click", function () {
         $("#SavePanel").panel("open");
-        console.log("There are " + window.localStorage.length + " items.");
-        console.log(Pointers);
     });
     
     // EVENT HANDLER saves map when "Save Map" button (panel) is clicked:
@@ -302,7 +300,7 @@ function saveMap() {
             var nKey = "Map" + window.localStorage.length;
             alert(nKey);
         
-            window.localStorage.setItem(nKey, nMap);
+            localStorage.setItem(nKey, nMap);
             
             document.getElementById('MapHeading').innerHTML = MapName;
             
