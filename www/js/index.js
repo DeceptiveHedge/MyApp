@@ -297,9 +297,10 @@ function saveMap() {
             };
             
             var nMap = JSON.stringify(MapDetail);
-            console.log(nMap);
+            alert(nMap);
             
             var nKey = "Map" + window.localStorage.length;
+            alert(nKey);
         
             window.localStorage.setItem(nKey, nMap);
             
