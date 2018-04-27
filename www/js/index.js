@@ -352,7 +352,7 @@ function loadMap() {
             Maplist.add(o); 
         }
         
-        Maplist.selectedIndex = -1;
+        //Maplist.selectedIndex = -1;
         
     });
     
