@@ -329,6 +329,7 @@ function loadMap() {
     //EVENT HANDLER when Load Map is clicked open load panel and initialize select list:
     $('#LoadMap').on("click", function () {
         $("#LoadPanel").panel("open");
+        alert(window.localStorage.length);
         alert("panel opens");
         
         // CLEAR all current options from list
