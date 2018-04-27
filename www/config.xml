@@ -13,8 +13,8 @@
         A map application which allows you to create custom pointers, get route to these pointers, save/load maps and share maps with friends. 
     </description>
 
-    <author email="monj1_14@uni.worc.ac.uk">
-        James Money
+    <author href="http://www.worcester.ac.uk/discover/chris-bowers.html" email="c.bowers@worc.ac.uk">
+        Chris P. Bowers
     </author>
 	
 	<!-- required plugins go here -->

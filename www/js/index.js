@@ -1,9 +1,9 @@
-// Allows the use of backendless:
+
 Backendless.serverURL = 'https://api.backendless.com';
 Backendless.initApp("067F8686-1D56-3920-FF6F-EFB1C9AFEC00", "64260B74-AC20-579E-FF29-6F2DEEC33300");
 
-// Opens signin page on startup:
 window.location.href = "#signIn";
+
 
 // Event Listener for signIn screen:
 $(document).on("pageshow", "#signIn", signInScreen);
@@ -11,7 +11,6 @@ $(document).on("pageshow", "#signIn", signInScreen);
 // Event Listener for map screen:
 $(document).on("pageshow", "#viewScreen", mapScreen);
 
-// Global Variables:
 var mymap;
 var startLocation;
 var Pointers = [];
@@ -23,11 +22,14 @@ var showLocation = true;
 
 // METHOD: Handles actions on the map screen:
 function mapScreen() {
+    
+     $("#LoadPanel").on("panelbeforeopen", function() {
+        console.log('LoadPanel open');
+    });
 
     createMap();
     markerGroup = L.layerGroup().addTo(mymap);
     
-    // METHOD: When locate button is clicked toggle between locating user or not:
     $('#Locate').on("click", function() {
         var color = clicked ? 'black' : 'blue';
         var locateUser = clicked ? false : true;
@@ -48,7 +50,6 @@ function mapScreen() {
     logOut();
 }
 
-// METHOD: creates a route between two points using Leaflet Routing Machine:
 function createRoute(lat1, lng1, lat2, lng2) {
     control = L.Routing.control({
         waypoints: [
@@ -61,16 +62,17 @@ function createRoute(lat1, lng1, lat2, lng2) {
 }
 
 //-------------MAP CREATION-------------------//
-// METHOD: creates and initializes the map using Leaflet:
 function createMap() {
     
     mymap = L.map('map').setView([51.505, -0.09], 13);
+    
+    
+    //mymap.locate({setView: true, maxZoom: 16});
     
     userLocation = L.marker(mymap.getCenter()).addTo(mymap);
     
     startLocation = userLocation.getLatLng();
     
-    // GETS accurate user location using googleLoader:
     var glcl = google.loader.ClientLocation;
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGVjZXB0aXZlaGVkZ2UiLCJhIjoiY2plZTZ5ajRmMTM3NTJ4bzlzNGQwdGtlYyJ9.Ehp7SAyfmfmA9RvFrw_Upg', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -91,7 +93,6 @@ function createMap() {
 }
 
 //---------ADD POINTER--------------------------------//
-// METHOD: Adds a pointer using the customisable options:
 function addPointer() {
     var IconValue;
     var ColorValue;
@@ -141,7 +142,6 @@ function addPointer() {
         
         alert("Double Tap on map to add pointer.");
         
-        // EVENT HANDLER: Detects when user double clicks on map:
         mymap.on('dblclick', function (e) {
             if (MarkerPlaced == false)
             {
@@ -163,9 +163,10 @@ function addPointer() {
 
 //---------------CREATE POINTER-----------------------//
 
-// METHOD: Creates a pointer with a name, location, image and if its a collectable:
+
 function createPointer(Name, Loc, Image, Checked)
 {
+    console.log(Loc);
     var nIcon = L.icon({iconUrl: Image, iconSize: [38, 38], iconAnchor: [12, 12]});
     
     var nPopup;
@@ -181,8 +182,6 @@ function createPointer(Name, Loc, Image, Checked)
         var dreP = document.createElement("BUTTON");
         var drtxtP = document.createTextNode("DIRECTIONS");
         dreP.appendChild(drtxtP);
-        
-        // EVENT HANDLER: when directions button on popup is clicked, toggle between route and no route:
         dreP.onclick = function(){
             if (control == null)
             {
@@ -203,8 +202,6 @@ function createPointer(Name, Loc, Image, Checked)
         var dltP = document.createElement("BUTTON");
         var dtxtP = document.createTextNode("DELETE");
         dltP.appendChild(dtxtP);
-        
-        // EVENT HANDLER: when delete button is clicked then delete pointer and remove reference to it:
         dltP.onclick = function(){
             console.log(Pointers.length);
             console.log("DELETE WORKING!!!"); 
@@ -223,6 +220,8 @@ function createPointer(Name, Loc, Image, Checked)
         namP.appendChild(dltP);
         divP.appendChild(namP);
         
+        
+        
         nPopup = L.popup()
                     .setContent(divP);
     }
@@ -231,7 +230,6 @@ function createPointer(Name, Loc, Image, Checked)
         nPopup = L.popup().setContent(Name);
         var checkMove = true;
         
-        // EVENT HANDLER: when user moves check if it is within range of pointer:
         userLocation.on("move", function (e) {
             var userLoc = userLocation.getLatLng();
             
@@ -272,20 +270,19 @@ function createPointer(Name, Loc, Image, Checked)
 }
 
 //---------------SAVE MAP------------------------------//
-// METHOD: Saves the map with any accompanying pointers to local storage:
 function saveMap() {
-    
-    // EVENT HANDLER loads save panel when "Save Map" button is clicked:
+    // EVENT HANDLER saves map when "Save Map" button is clicked:
     $('#SaveMap').on("click", function () {
+        console.log("detect this");
         $("#SavePanel").panel("open");
         console.log("There are " + window.localStorage.length + " items.");
         console.log(Pointers);
     });
     
-    // EVENT HANDLER saves map when "Save Map" button (panel) is clicked:
     $('#SavePanelMap').on("click", function () {
         var MapName = $('#MapNameText').val();
         var Location = startLocation;
+        
         
         if (MapName != "")
         {
@@ -315,18 +312,16 @@ function saveMap() {
         }
     });
     
-    // EVENT HANDLER closes save panel when "Close" button is clciked:
     $('#CloseSave').on("click", function () {
         $("#SavePanel").panel("close");
     });
 }
 
 //--------------LOAD MAP-------------------------//
-//METHOD:loads map from local storage: 
 function loadMap() {
    var Maplist = document.getElementById("MapList");
     
-    //EVENT HANDLER when Load Map is clicked open load panel and initialize select list:
+    
     $('#LoadMap').on("click", function () {
         $("#LoadPanel").panel("open");
         
@@ -352,11 +347,10 @@ function loadMap() {
             Maplist.add(o); 
         }
         
-        //Maplist.selectedIndex = -1;
+        Maplist.selectedIndex = -1;
         
     });
     
-    //EVENT HANDLER: loads map from local storage when "Load Map" (panel) is clicked:
     $('#LoadPanelMap').on("click", function () {
         console.log(window.localStorage.length);
         var Loaded = false;
@@ -383,9 +377,7 @@ function loadMap() {
                     // CLEAR existing pointers on map and array:
                     Pointers = [];
                     markerGroup.clearLayers();
-                    
-                    // LOAD map location:
-                    mymap.setView([latitude, longitude], 13);
+                
                 
                     // LOAD all pointers onto map:
                     for (var i = 0; i < pointersJSON.length; i++)
@@ -409,7 +401,6 @@ function loadMap() {
         $("#LoadPanel").panel("close");
     });
     
-    // EVENT HANDLER delete map from local storage when "Delete Map" is clicked:
     $('#DeleteMap').on("click", function () {
         console.log(window.localStorage.length);
         var Deleted = false;
@@ -450,20 +441,17 @@ function loadMap() {
         }
     });
     
-    // EVENT HANDLER closes load panel when "close" button is clicked:
     $('#CloseLoad').on("click", function () {
         $("#LoadPanel").panel("close");
     });
 }
 
 //-------------SHARE MAP-----------------//
-// METHOD: shares map to backendless server:
 function shareMap() {
     var Maplist = document.getElementById("MapList2");
     
     var Maplist2 = document.getElementById("MapList3");
     
-    // EVENT HANDLER initializes map lists when "share map" is clicked:
     $('#ShareMap').on("click", function () {
         $("#SharePanel").panel("open");
         
@@ -491,7 +479,6 @@ function shareMap() {
         
         Backendless.Data.of("SharedMaps").find().then(displayMaps).catch(error);
         
-        // METHOD: if backendless finds data, add these as options:
         function displayMaps(maps) {
             console.log(maps);
             
@@ -511,7 +498,6 @@ function shareMap() {
         Maplist.selectedIndex = -1;
     });
     
-    // EVENT HANDLER: shares map to backendless server when "share map" (panel) is clicked:
     $('#SharePanelMap').on("click", function () {
         for (var i=1; (i+1)<=window.localStorage.length; i++)
         {
@@ -535,7 +521,6 @@ function shareMap() {
         }
     });
     
-    // EVENT HANDLER: load map from backend server when "Load Map" is clicked:
     $('#LoadSharedMap').on("click", function () {
         var Loaded = false;
         
@@ -591,7 +576,6 @@ function shareMap() {
         $("#SharePanel").panel("close");
     });
     
-    // EVENT HANDLER: closes share panel when "close" button is clicked:
     $('#CloseShare').on("click", function () {
         $("#SharePanel").panel("close");
     });
@@ -606,7 +590,6 @@ function shareMap() {
 
 //---------LOG OUT---------------------------//
 function logOut(){
-    // EVENT HANDLER: logs out user when "logOut" is clicked:
     $('#LogOut').on("click", function () {
         if (confirm("Are you sure you want to log out?")) {
             function userLoggedOut()
@@ -631,10 +614,9 @@ function logOut(){
 }
 
 //------------------------------------------//
-// METHODS: handle location success and failure:
+
 function onLocationFound(e){
     userLocation.setLatLng(e.latlng);
-    startLocation = e.latlng;
     if (showLocation == true)
     {   
         mymap.setView(userLocation.getLatLng(),
@@ -649,7 +631,7 @@ function onLocationError(e) {
 //-----------------------------------------------------------------------//
 //----------------SIGN IN SCREEN-----------------------------------------//
 //-----------------------------------------------------------------------//
-//METHOD: signs the user in via log in or register:
+
 function signInScreen() {
     
     function success(result)
@@ -668,7 +650,6 @@ function signInScreen() {
         console.log(err.statusCode);
     }
     
-    // Checks wether user is logged in or not:
     var LogInValid = Backendless.UserService.isValidLogin().then(success).catch(error);
     
     if (LogInValid == true)
@@ -728,6 +709,9 @@ function signInScreen() {
         });
     }
 }
+
+
+
 
 //-----------------------------------------------//
 //----------------------------------------------//

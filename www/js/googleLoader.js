@@ -1,4 +1,3 @@
-// obtained from https://developers.google.com/speed/libraries/?csw=1:
 if(!window['googleLT_']){window['googleLT_']=(new Date()).getTime();}if (!window['google']) {
 window['google'] = {};
 }
