@@ -300,7 +300,7 @@ function saveMap() {
             var nKey = "Map" + window.localStorage.length;
             alert(nKey);
         
-            localStorage.setItem(nKey, nMap);
+            window.localStorage.setItem(nKey, nMap);
             
             alert(window.localStorage.length);
             document.getElementById('MapHeading').innerHTML = MapName;
@@ -471,6 +471,7 @@ function shareMap() {
     
     // EVENT HANDLER initializes map lists when "share map" is clicked:
     $('#ShareMap').on("click", function () {
+        window.localStorage.clear();
         $("#SharePanel").panel("open");
         
         // CLEAR all current options from lists
