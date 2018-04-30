@@ -473,7 +473,6 @@ function shareMap() {
     
     // EVENT HANDLER initializes map lists when "share map" is clicked:
     $('#ShareMap').on("click", function () {
-        window.localStorage.clear();
         $("#SharePanel").panel("open");
         
         // CLEAR all current options from lists
