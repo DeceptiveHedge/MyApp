@@ -327,7 +327,6 @@ function loadMap() {
     //EVENT HANDLER when Load Map is clicked open load panel and initialize select list:
     $('#LoadMap').on("click", function () {
         $("#LoadPanel").panel("open");
-        alert(window.localStorage.length);
         
         // CLEAR all current options from list
         for (var i = Maplist.options.length - 1; i >=0; i--)
@@ -341,7 +340,6 @@ function loadMap() {
             var getName = window.localStorage.getItem("Map" + i);
         
             var mapJSON = JSON.parse(getName);
-            alert(mapJSON.Name);
             
             var o = document.createElement("option");
             o.text = mapJSON.Name;
