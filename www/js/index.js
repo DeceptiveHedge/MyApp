@@ -409,42 +409,20 @@ function loadMap() {
     
     // EVENT HANDLER delete map from local storage when "Delete Map" is clicked:
     $('#DeleteMap').on("click", function () {
-        console.log(window.localStorage.length);
-        var Deleted = false;
+        var listName = $("#MapList").val();
         
         for (var i=1; (i+1)<=window.localStorage.length; i++)
         {
-            if (Deleted == false)
-            {
-                var MapString = window.localStorage.getItem("Map" + i);
-                var mapJSON = JSON.parse(MapString);
-                var mapName = mapJSON.Name;
-                var listName = $("#MapList").val();
+            var MapString = window.localStorage.getItem("Map" + i);
+            var mapJSON = JSON.parse(MapString);
+            var mapName = mapJSON.Name;
             
-                if (mapName == listName)
-                {
-                    window.localStorage.removeItem("Map" + i);
-                    
-                    var Removed = false;
-                    for (var a = Maplist.options.length - 1; a >=0; a--)
-                    {
-                        if (Removed == false)
-                        {
-                            if (Maplist.options[a].text == listName)
-                            {
-                                Maplist.remove(a);
-                                Removed = true;
-                            }
-                        }
-                    }
-                    
-                    Maplist.selectedIndex = -1;
-                    
-                    Deleted = true;
-                    console.log(window.localStorage.length)
-                }
+            if(listName == mapName)
+            {
+                window.localStorage.removeItem("Map" + i);
+                Maplist.selectedIndex = -1;
+                return;
             }
-               
         }
     });
     
