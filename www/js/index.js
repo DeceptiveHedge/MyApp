@@ -507,7 +507,6 @@ function shareMap() {
             for (var i=0; i < maps.length; i++)
             {
                 var getName = maps[i].Maps;
-                alert(getName);
                 
                 var mapJSON = JSON.parse(getName);
                 
