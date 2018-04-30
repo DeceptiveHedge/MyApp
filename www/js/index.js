@@ -421,9 +421,12 @@ function loadMap() {
             {
                 window.localStorage.removeItem("Map" + i);
                 Maplist.selectedIndex = -1;
+                alert("Map Deleted");
                 return;
             }
         }
+        
+        $("#LoadPanel").panel("close");
     });
     
     // EVENT HANDLER closes load panel when "close" button is clicked:
