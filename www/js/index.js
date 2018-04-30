@@ -2,6 +2,8 @@
 Backendless.serverURL = 'https://api.backendless.com';
 Backendless.initApp("067F8686-1D56-3920-FF6F-EFB1C9AFEC00", "64260B74-AC20-579E-FF29-6F2DEEC33300");
 
+window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+
 // Opens signin page on startup:
 window.location.href = "#signIn";
 
@@ -505,6 +507,7 @@ function shareMap() {
             for (var i=0; i < maps.length; i++)
             {
                 var getName = maps[i].Maps;
+                alert(getName);
                 
                 var mapJSON = JSON.parse(getName);
                 
