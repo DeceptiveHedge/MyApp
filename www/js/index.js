@@ -407,28 +407,6 @@ function loadMap() {
         $("#LoadPanel").panel("close");
     });
     
-    // EVENT HANDLER delete map from local storage when "Delete Map" is clicked:
-    $('#DeleteMap').on("click", function () {
-        var listName = $("#MapList").val();
-        
-        for (var i=1; (i+1)<=window.localStorage.length; i++)
-        {
-            var MapString = window.localStorage.getItem("Map" + i);
-            var mapJSON = JSON.parse(MapString);
-            var mapName = mapJSON.Name;
-            
-            if(listName == mapName)
-            {
-                window.localStorage.removeItem("Map" + i);
-                Maplist.selectedIndex = -1;
-                alert("Map Deleted");
-                return;
-            }
-        }
-        
-        $("#LoadPanel").panel("close");
-    });
-    
     // EVENT HANDLER closes load panel when "close" button is clicked:
     $('#CloseLoad').on("click", function () {
         $("#LoadPanel").panel("close");
