@@ -297,14 +297,10 @@ function saveMap() {
             };
             
             var nMap = JSON.stringify(MapDetail);
-            alert(nMap);
             
             var nKey = "Map" + window.localStorage.length;
-            alert(nKey);
         
             window.localStorage.setItem(nKey, nMap);
-            
-            alert(window.localStorage.length);
             document.getElementById('MapHeading').innerHTML = MapName;
             
             $("#SavePanel").panel("close");
@@ -332,19 +328,16 @@ function loadMap() {
     $('#LoadMap').on("click", function () {
         $("#LoadPanel").panel("open");
         alert(window.localStorage.length);
-        alert("panel opens");
         
         // CLEAR all current options from list
         for (var i = Maplist.options.length - 1; i >=0; i--)
         {
-            alert("clear works");
             Maplist.remove(i);
         }
         
         // ADD options for each saved map
         for (var i=1; (i+1)<=window.localStorage.length; i++)
         {
-            alert("this for works");
             var getName = window.localStorage.getItem("Map" + i);
         
             var mapJSON = JSON.parse(getName);
@@ -359,7 +352,6 @@ function loadMap() {
             Maplist.add(o); 
         }
         
-        alert("did that all work");
         Maplist.selectedIndex = -1;
         
     });
