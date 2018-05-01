@@ -415,9 +415,7 @@ function loadMap() {
 
 //-------------SHARE MAP-----------------//
 // METHOD: shares map to backendless server:
-function shareMap() {
-    var Keys = JSON.parse(localStorage.getItem("keys"));
-    
+function shareMap() {  
     var Maplist = document.getElementById("MapList2");
     
     var Maplist2 = document.getElementById("MapList3");
@@ -425,6 +423,7 @@ function shareMap() {
     // EVENT HANDLER initializes map lists when "share map" is clicked:
     $('#ShareMap').on("click", function () {
         $("#SharePanel").panel("open");
+        var Keys = JSON.parse(localStorage.getItem("keys"));
         
         // CLEAR all current options from lists
         for (var i = Maplist.options.length - 1; i >=0; i--)
