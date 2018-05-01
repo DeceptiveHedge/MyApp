@@ -22,6 +22,15 @@ var control;
 var userLocation;
 var clicked;
 var showLocation = true;
+var KeyArray;
+if(localStorage.getItem("keys") === null)
+{
+    KeyArray = [];
+}
+else
+{
+    KeyArray = JSON.parse(localStorage.getItem("keys"));
+}
 
 // METHOD: Handles actions on the map screen:
 function mapScreen() {
@@ -298,9 +307,10 @@ function saveMap() {
             
             var nMap = JSON.stringify(MapDetail);
             
-            var nKey = "Map" + window.localStorage.length;
+            KeyArray.push(MapName);
         
-            window.localStorage.setItem(nKey, nMap);
+            localStorage.setItem(MapName, nMap);
+            localStorage.setItem("keys", JSON.stringify(KeyArray));
             document.getElementById('MapHeading').innerHTML = MapName;
             
             $("#SavePanel").panel("close");
@@ -327,6 +337,7 @@ function loadMap() {
     //EVENT HANDLER when Load Map is clicked open load panel and initialize select list:
     $('#LoadMap').on("click", function () {
         $("#LoadPanel").panel("open");
+        var Keys = JSON.parse(localStorage.getItem("keys"));
         
         // CLEAR all current options from list
         for (var i = Maplist.options.length - 1; i >=0; i--)
@@ -335,73 +346,62 @@ function loadMap() {
         }
         
         // ADD options for each saved map
-        for (var i=1; (i+1)<=window.localStorage.length; i++)
+        for (var i=0; i < Keys.length; i++)
         {
-            var getName = window.localStorage.getItem("Map" + i);
-        
-            var mapJSON = JSON.parse(getName);
-            
             var o = document.createElement("option");
-            o.text = mapJSON.Name;
-            if ( i == 1)
-            {
-                o.setAttribute("selected", "selected");
-            }
-            Maplist.add(o); 
+            o.text = Keys[i];
+            
+            Maplist.add(o);
         }
         
         Maplist.selectedIndex = -1;
-        
     });
     
     //EVENT HANDLER: loads map from local storage when "Load Map" (panel) is clicked:
     $('#LoadPanelMap').on("click", function () {
         console.log(window.localStorage.length);
         var Loaded = false;
+        var Keys = JSON.parse(localStorage.getItem("keys"));
+        var listName = $("#MapList").val();
         
-        for (var i=1; (i+1)<=window.localStorage.length; i++)
+        for (var i=0; i < Keys.length; i++)
         {
-            if (Loaded == false)
-            {
-             console.log(window.localStorage.length);
-                var MapString = window.localStorage.getItem("Map" + i);
-                var mapJSON = JSON.parse(MapString);
-                var mapName = mapJSON.Name;
-                var listName = $("#MapList").val();
+            var Map = localStorage.getItem(Keys[i]);
             
-                if (mapName == listName)
+            console.log(Map);
+            
+            var MapJSON = JSON.parse(Map);
+            
+            var mapName = MapJSON.Name;
+            
+            if(mapName == listName)
+            {
+                console.log(mapName + " = " + listName);
+                var latitude = MapJSON.Latitude;
+                var longitude = MapJSON.Longitude;
+                var pointersJSON = MapJSON.Pointers;
+                console.log(pointersJSON);
+                document.getElementById('MapHeading').innerHTML = mapName; 
+                
+                // CLEAR existing pointers on map and array:
+                Pointers = [];
+                markerGroup.clearLayers();
+                    
+                // LOAD map location:
+                mymap.setView([latitude, longitude], 13);
+                
+                // LOAD all pointers onto map:
+                for (var i = 0; i < pointersJSON.length; i++)
                 {
-                    console.log(mapName + " = " + listName);
-                    var latitude = mapJSON.Latitude;
-                    var longitude = mapJSON.Longitude;
-                    var pointersJSON = mapJSON.Pointers;
-                    console.log(pointersJSON);
-                    document.getElementById('MapHeading').innerHTML = mapName; 
-                
-                    // CLEAR existing pointers on map and array:
-                    Pointers = [];
-                    markerGroup.clearLayers();
+                    var pJSON = JSON.parse(pointersJSON[i]);
+                    var pName = pJSON.IconName;
+                    var pLoc = pJSON.Location;
+                    var pImage = pJSON.IconUrl;
+                    var pChecked = pJSON.Checked;
                     
-                    // LOAD map location:
-                    mymap.setView([latitude, longitude], 13);
-                
-                    // LOAD all pointers onto map:
-                    for (var i = 0; i < pointersJSON.length; i++)
-                    {
-                        var pJSON = JSON.parse(pointersJSON[i]);
-                        var pName = pJSON.IconName;
-                        var pLoc = pJSON.Location;
-                        var pImage = pJSON.IconUrl;
-                        var pChecked = pJSON.Checked;
-                    
-                        createPointer(pName, pLoc,      
-                        pImage, pChecked);
-                    }
-                    
-                    Loaded = true;
+                    createPointer(pName, pLoc, pImage, pChecked);
                 }
-            }
-               
+            } 
         }
         
         $("#LoadPanel").panel("close");
@@ -416,6 +416,8 @@ function loadMap() {
 //-------------SHARE MAP-----------------//
 // METHOD: shares map to backendless server:
 function shareMap() {
+    var Keys = JSON.parse(localStorage.getItem("keys"));
+    
     var Maplist = document.getElementById("MapList2");
     
     var Maplist2 = document.getElementById("MapList3");
@@ -435,17 +437,12 @@ function shareMap() {
         }
         
         // ADD options for each saved map
-        for (var i=1; (i+1)<=window.localStorage.length; i++)
+        for (var i=0; i < Keys.length; i++)
         {
-            var getName = window.localStorage.getItem("Map" + i);
-        
-            var mapJSON = JSON.parse(getName);
-            
             var o = document.createElement("option");
-            o.text = mapJSON.Name;
-            Maplist.add(o); 
+            o.text = Keys[i];
+            Maplist.add(o);
         }
-        
         Backendless.Data.of("SharedMaps").find().then(displayMaps).catch(error);
         
         // METHOD: if backendless finds data, add these as options:
@@ -470,17 +467,17 @@ function shareMap() {
     
     // EVENT HANDLER: shares map to backendless server when "share map" (panel) is clicked:
     $('#SharePanelMap').on("click", function () {
-        for (var i=1; (i+1)<=window.localStorage.length; i++)
+        var Keys = JSON.parse(localStorage.getItem("keys"));
+        var listName = $("#MapList2").val();
+        
+        for (var i=0; i < Keys.length; i++)
         {
-            var MapString = window.localStorage.getItem("Map" + i);
-            
-            var mapJSON = JSON.parse(MapString);
-            var mapName = mapJSON.Name;
-            var listName = $("#MapList2").val();
+            var MapString = localStorage.getItem(Keys[i]);
+            var MapJSON = JSON.parse(MapString);
+            var mapName = MapJSON.Name;
             
             if(mapName == listName)
             {
-            
                 var newMap = {};
                 newMap.Maps = MapString;
                 Backendless.Data.of("SharedMaps").save(newMap).then(saved).catch(error);
