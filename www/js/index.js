@@ -360,9 +360,10 @@ function loadMap() {
     //EVENT HANDLER: loads map from local storage when "Load Map" (panel) is clicked:
     $('#LoadPanelMap').on("click", function () {
         console.log(window.localStorage.length);
-        var Loaded = false;
         var Keys = JSON.parse(localStorage.getItem("keys"));
         var listName = $("#MapList").val();
+        console.log(Keys);
+        var Loaded = false;
         
         for (var i=0; i < Keys.length; i++)
         {
@@ -374,7 +375,7 @@ function loadMap() {
             
             var mapName = MapJSON.Name;
             
-            if(mapName == listName)
+            if((mapName == listName) && (Loaded == false))
             {
                 console.log(mapName + " = " + listName);
                 var latitude = MapJSON.Latitude;
@@ -401,10 +402,51 @@ function loadMap() {
                     
                     createPointer(pName, pLoc, pImage, pChecked);
                 }
+                
+                Loaded = true;
             } 
         }
         
         $("#LoadPanel").panel("close");
+    });
+    
+    // EVENT HANDLER deletes a map when "delete" button is clicked:
+    $('#DeleteMap').on("click", function () {
+        var Keys = JSON.parse(localStorage.getItem("keys"));
+        var listName = $("#MapList").val();
+        var Deleted = false;
+        
+        for(var i=0; i < Keys.length; i++)
+        {
+            if((listName == Keys[i]) && (Deleted == false))
+            {
+                console.log(listName + " = " + Keys[i]);
+                localStorage.removeItem(Keys[i]);
+                Keys.splice(i, 1);
+                localStorage.setItem("keys", JSON.stringify(Keys));
+                KeyArray = Keys;
+                
+                // CLEAR all current options from list
+                for (var i = Maplist.options.length - 1; i >=0; i--)
+                {
+                    Maplist.remove(i);
+                }
+        
+                // ADD options for each saved map
+                for (var i=0; i < Keys.length; i++)
+                {
+                    var o = document.createElement("option");
+                    o.text = Keys[i];
+            
+                    Maplist.add(o);
+                }
+                
+                Maplist.selectedIndex = -1;
+                
+                Deleted = true;
+                alert("Map Deleted");
+            }
+        }
     });
     
     // EVENT HANDLER closes load panel when "close" button is clicked:
